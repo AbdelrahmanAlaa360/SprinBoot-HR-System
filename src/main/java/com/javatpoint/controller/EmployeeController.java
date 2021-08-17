@@ -29,7 +29,7 @@ public class EmployeeController {
         Employee employer = employeeService.getUserById(id);
         return ResponseEntity.ok().build();
     }
-    
+
     @PostMapping(value = "/add-user")
     public ResponseEntity addUser(@RequestBody Employee userRecord) {
         employeeService.addUser(userRecord);
