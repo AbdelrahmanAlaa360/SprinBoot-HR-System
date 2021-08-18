@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 
+import java.sql.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
@@ -36,15 +38,15 @@ public class EmployeeServiceTest {
     @Test
     public void addEmployee() {
         Employee userRecord  = new Employee();
-        userRecord.setName("Ahmed");
-        userRecord.setBirthDate(1990);
+        userRecord.setName("Sayed");
+        userRecord.setBirthDate(2000);
         userRecord.setDepartment("CS");
         userRecord.setExperience("High");
         userRecord.setGender("Male");
         userRecord.setTeamName("Team 51");
         userRecord.setGrossSalary(7900);
         userRecord.setNetSalary(7700);
-        userRecord.setManagerName("Abbas");
+        userRecord.setManagerName("Tarek");
         userRecord.setGradDate(2019);
         Employee result = employeeService.addUser(userRecord);
     }
@@ -104,6 +106,44 @@ public class EmployeeServiceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(3)))
                 .andExpect(status().isOk());
+    }
+
+
+    @Test
+    public void getAllEmployeesUnderManager() throws SQLException {
+        String managerEmployee = "Abbas";
+
+        final String DB_URL = "jdbc:mysql://localhost/phase1";
+        final String USER = "root";
+        final String PASS = "12345";
+        String Query = "SELECT DISTINCT manager_name FROM employee WHERE manager_name = '"+managerEmployee+"'";
+
+        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(Query);
+        System.out.println("====================\n\n");
+
+        while(rs.next()){
+            String employeeManager = rs.getString("manager_name");
+            Connection conn2 = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt2 = conn2.createStatement();
+            String Query2 = "SELECT * FROM employee WHERE manager_name = '"+employeeManager+"'";
+            ResultSet rs2 = stmt2.executeQuery(Query2);
+            while(rs2.next()){
+                String employee = rs2.getString("name");
+                System.out.println(employee);
+                Connection conn3 = DriverManager.getConnection(DB_URL, USER, PASS);
+                Statement stmt3 = conn3.createStatement();
+                String Query3 = "SELECT * FROM employee WHERE manager_name = '"+employee+"'";
+                ResultSet rs3 = stmt3.executeQuery(Query3);
+                while(rs3.next()) {
+                    System.out.println(rs3.getString("name"));
+                }
+            }
+            //System.out.println(rs.getString("manager_name"));
+        }
+
+        System.out.println("====================\n\n");
     }
 
 }
