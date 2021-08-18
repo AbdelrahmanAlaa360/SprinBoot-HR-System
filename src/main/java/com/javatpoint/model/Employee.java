@@ -1,8 +1,6 @@
 package com.javatpoint.model;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 @Entity
 public class Employee
 {
@@ -32,6 +30,20 @@ public class Employee
         this.netSalary = netSalary;
         this.teamName = teamName;
         this.managerName = managerName;
+    }
+
+    public static Employee updateEmployee(Employee oldEmployer, Employee newEmployer) {
+        if(newEmployer.name != null)oldEmployer.name = newEmployer.name;
+        if(newEmployer.gender != null)oldEmployer.gender = newEmployer.gender;
+        if(newEmployer.birthDate != 0)oldEmployer.birthDate = newEmployer.birthDate;
+        if(newEmployer.gradDate != 0)oldEmployer.gradDate = newEmployer.gradDate;
+        if(newEmployer.experience != null)oldEmployer.experience = newEmployer.experience;
+        if(newEmployer.department != null)oldEmployer.department = newEmployer.department;
+        if(newEmployer.grossSalary != 0)oldEmployer.grossSalary = newEmployer.grossSalary;
+        if(newEmployer.netSalary != 0)oldEmployer.netSalary = newEmployer.netSalary;
+        if(newEmployer.teamName != null)oldEmployer.teamName = newEmployer.teamName;
+        if(newEmployer.managerName != null)oldEmployer.managerName = newEmployer.managerName;
+        return oldEmployer;
     }
 
     public Employee() {
