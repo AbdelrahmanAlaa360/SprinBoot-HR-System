@@ -35,6 +35,12 @@ public class EmployeeServiceTest {
     @Autowired
     EmployeeService employeeService;
 
+
+    final String DB_URL = "jdbc:mysql://localhost/phase1";
+    final String USER = "root";
+    final String PASS = "12345";
+
+
     @Test
     public void addEmployee() {
         Employee userRecord  = new Employee();
@@ -108,15 +114,25 @@ public class EmployeeServiceTest {
                 .andExpect(status().isOk());
     }
 
+    public void listAllEmployees(String manager) throws SQLException {
+        if(manager != "NULL") {
+            String Query = "SELECT * FROM employee WHERE manager_name = '" + manager + "'";
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(Query);
+            String employeeManager = null;
+            while (rs.next()) {
+                employeeManager = rs.getString("name");
+                System.out.println(employeeManager);
+            }
+        }
+    }
 
     @Test
     public void getAllEmployeesUnderManager() throws SQLException {
-        String managerEmployee = "Abbas";
+        String managerEmployee = "Amin";
 
-        final String DB_URL = "jdbc:mysql://localhost/phase1";
-        final String USER = "root";
-        final String PASS = "12345";
-        String Query = "SELECT DISTINCT manager_name FROM employee WHERE manager_name = '"+managerEmployee+"'";
+        String Query = "SELECT name, manager_name FROM employee WHERE manager_name = '"+managerEmployee+"'";
 
         Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
@@ -124,12 +140,11 @@ public class EmployeeServiceTest {
         System.out.println("====================\n\n");
 
         while(rs.next()){
-            String employeeManager = rs.getString("manager_name");
-            Connection conn2 = DriverManager.getConnection(DB_URL, USER, PASS);
-            Statement stmt2 = conn2.createStatement();
-            String Query2 = "SELECT * FROM employee WHERE manager_name = '"+employeeManager+"'";
-            ResultSet rs2 = stmt2.executeQuery(Query2);
-            while(rs2.next()){
+            String employeeManager = rs.getString("name");
+            System.out.println(employeeManager);
+            listAllEmployees(employeeManager);
+
+            /*while(rs2.next()){
                 String employee = rs2.getString("name");
                 System.out.println(employee);
                 Connection conn3 = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -140,10 +155,35 @@ public class EmployeeServiceTest {
                     System.out.println(rs3.getString("name"));
                 }
             }
-            //System.out.println(rs.getString("manager_name"));
+            //System.out.println(rs.getString("manager_name"));*/
         }
 
         System.out.println("====================\n\n");
+    }
+
+    @Test
+    public void getEmployeesInTeam() throws SQLException {
+        String teamName = "Team 51";
+        String Query = "SELECT * FROM employee WHERE team_name = '"+teamName+"'";
+        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(Query);
+        System.out.println("Employers in " + teamName);
+        while(rs.next()){
+            System.out.println(rs.getString("name"));
+        }
+    }
+
+    @Test
+    public void getEmployeesDirectly() throws SQLException {
+        String managerName = "Abbas";
+        String Query = "SELECT * FROM employee WHERE manager_name = '"+managerName+"'";
+        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(Query);
+        while(rs.next()){
+            System.out.println(rs.getString("name"));
+        }
     }
 
 }
