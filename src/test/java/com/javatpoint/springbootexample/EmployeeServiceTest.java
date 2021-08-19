@@ -77,6 +77,7 @@ public class EmployeeServiceTest {
     @Test
     @Transactional
     public void updateEmployee() throws Exception {
+        // Test is Failed
         int id = 2;
         Employee employee = new Employee();
         employee.setName("Abdo");
@@ -130,7 +131,8 @@ public class EmployeeServiceTest {
 
     @Test
     public void getAllEmployeesUnderManager() throws SQLException {
-        String managerEmployee = "Amin";
+        // Test Passed
+        String managerEmployee = "Abbas";
 
         String Query = "SELECT name, manager_name FROM employee WHERE manager_name = '"+managerEmployee+"'";
 
@@ -183,6 +185,34 @@ public class EmployeeServiceTest {
         ResultSet rs = stmt.executeQuery(Query);
         while(rs.next()){
             System.out.println(rs.getString("name"));
+        }
+    }
+
+    @Test
+    public void removeManager() throws Exception {
+        String oldManager = "Sayed";
+        String Query = "SELECT * FROM employee WHERE name = '"+oldManager+"'";
+        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(Query);
+        String newManager = null;
+        while(rs.next()){
+            newManager = rs.getString("manager_name");
+        }
+        if(newManager != "NULL") {
+            Query = "SELECT * FROM employee WHERE manager_name = '" + oldManager + "'";
+            rs = stmt.executeQuery(Query);
+            while (rs.next()) {
+                String Query2 = "UPDATE employee SET manager_name = '" + newManager + "' WHERE manager_name = '"+oldManager+"'";
+                Statement stmt2 = conn.createStatement();
+                stmt2.executeUpdate(Query2);
+            }
+            Query = "DELETE FROM employee WHERE name = '"+oldManager+"'";
+            stmt.executeUpdate(Query);
+            System.out.println("Manager Deleted Succesfully");
+        }
+        else{
+            System.out.println("Can not Delete This Manager");
         }
     }
 
