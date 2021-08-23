@@ -16,8 +16,8 @@ public class EmployeeController {
 
     @RequestMapping("/HR")
     public ResponseEntity<Employee> getAllUser(int id) throws NotFoundException {
-        Employee employer= employeeService.getUserById(id);
-        return  ResponseEntity.ok().build();
+        Employee employer = employeeService.getUserById(id);
+        return ResponseEntity.ok().build();
     }
 
     /*@PostMapping(value = "/update-user")
@@ -25,15 +25,14 @@ public class EmployeeController {
         Employer newEmployee = employeeService.getEmployeeInfo
     }*/
 
-    @PutMapping(value = "/update-user")
-    public Employee updateUser(@RequestBody Employee modifiedEmployee, int id) throws NotFoundException {
+    @PutMapping(value = "/update-user/{id}")
+    public ResponseEntity<Employee> updateUser(@RequestBody Employee modifiedEmployee, @PathVariable("id") Integer id) throws NotFoundException {
         Employee originalEmployee = employeeService.getUserById(id);
-        employeeService.updateUser(modifiedEmployee, originalEmployee);
-        return originalEmployee;
+        return ResponseEntity.ok(employeeService.updateUser(modifiedEmployee, originalEmployee));
     }
 
     @PostMapping(value = "/add-user")
-    public ResponseEntity addUser(@RequestBody Employee userRecord) {
+    public ResponseEntity addUser(@RequestBody Employee userRecord) throws Exception {
         employeeService.addUser(userRecord);
         return ResponseEntity.ok().build();
     }

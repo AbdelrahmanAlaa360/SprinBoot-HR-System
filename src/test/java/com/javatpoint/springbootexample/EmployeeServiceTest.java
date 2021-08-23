@@ -3,7 +3,6 @@ package com.javatpoint.springbootexample;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javatpoint.model.Employee;
-import com.javatpoint.model.Salary;
 import com.javatpoint.service.EmployeeService;
 import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -19,10 +18,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import javax.transaction.Transactional;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -35,14 +37,12 @@ public class EmployeeServiceTest {
     @Autowired
     EmployeeService employeeService;
 
-
     final String DB_URL = "jdbc:mysql://localhost/phase1";
     final String USER = "root";
     final String PASS = "12345";
 
-
     @Test
-    public void addEmployee() {
+    public void addEmployee() throws Exception {
         Employee userRecord  = new Employee();
         userRecord.setName("Sayed");
         userRecord.setBirthDate(2000);
@@ -50,11 +50,27 @@ public class EmployeeServiceTest {
         userRecord.setExperience("High");
         userRecord.setGender("Male");
         userRecord.setTeamName("Team 51");
-        userRecord.setGrossSalary(7900);
-        userRecord.setNetSalary(7700);
+        userRecord.setGrossSalary(5000);
         userRecord.setManagerName("Tarek");
         userRecord.setGradDate(2019);
-        Employee result = employeeService.addUser(userRecord);
+
+        //Employee result = employeeService.addUser(userRecord);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(userRecord);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/add-user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(status().isOk()).andDo(print());
+
+        String Query = "SELECT * FROM employee WHERE name = '"+userRecord.getName()+"'";
+        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(Query);
+        while(rs.next()){
+            assertEquals(rs.getInt("gross_salary"), userRecord.getGrossSalary());
+        }
     }
 
     @Test
@@ -71,7 +87,6 @@ public class EmployeeServiceTest {
         int id = 1;
         Employee result = employeeService.getUserById(1);
         assertEquals(result.getId(), 1);
-        //System.out.println(result);
     }
 
     @Test
@@ -89,24 +104,15 @@ public class EmployeeServiceTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employee);
-        mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user").
-                param("id",String.valueOf(id))
+        mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/"+id)
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
-
-//        String query = String.valueOf(employer.getId());
-//        Employee update = employeeService.updateUser(employer, query);
-//        assertThat(update).usingRecursiveComparison().isEqualTo(employer);
     }
 
     @Test
     @Transactional
     public void getEmployeeSalary() throws Exception {
         int id = 2;
-//      Employee employee = employeeService.getUserById(id);
-//      Salary salary = new Salary(employee);
-//      assertEquals(employee.getGrossSalary(), 1500);
-
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(3);
         mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-salary")
@@ -129,39 +135,41 @@ public class EmployeeServiceTest {
         }
     }
 
-    @Test
-    public void getAllEmployeesUnderManager() throws SQLException {
+    /*@Test
+    public void getAllEmployeesUnderManager() throws Exception {
         // Test Passed
-        String managerEmployee = "Abbas";
 
-        String Query = "SELECT name, manager_name FROM employee WHERE manager_name = '"+managerEmployee+"'";
+        Employee manager = employeeService.getUserById(1);
 
-        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(Query);
-        System.out.println("====================\n\n");
+        if (manager == null)
+            throw new NotFoundException("cant find manager");
 
-        while(rs.next()){
-            String employeeManager = rs.getString("name");
-            System.out.println(employeeManager);
-            listAllEmployees(employeeManager);
+        //List<Employee> employeesUnderManager = new ArrayList<>(manager.());
+        //List<EmployeeInfoOnlyDTO> employeesDTO = EmployeeInfoOnlyDTO.setEmployeeToDTOList(employeesUnderManager);
 
-            /*while(rs2.next()){
-                String employee = rs2.getString("name");
-                System.out.println(employee);
-                Connection conn3 = DriverManager.getConnection(DB_URL, USER, PASS);
-                Statement stmt3 = conn3.createStatement();
-                String Query3 = "SELECT * FROM employee WHERE manager_name = '"+employee+"'";
-                ResultSet rs3 = stmt3.executeQuery(Query3);
-                while(rs3.next()) {
-                    System.out.println(rs3.getString("name"));
-                }
-            }
-            //System.out.println(rs.getString("manager_name"));*/
-        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        ///String employeesUnderManagerJson = objectMapper.writeValueAsString(employeesDTO);
 
-        System.out.println("====================\n\n");
-    }
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/employee/manager/" + manager.getId()))
+                .andExpect((ResultMatcher) content().json(employeesUnderManagerJson))
+                .andExpect(status().isOk());
+//        String managerEmployee = "Abbas";
+//
+//        String Query = "SELECT name, manager_name FROM employee WHERE manager_name = '"+managerEmployee+"'";
+//
+//        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+//        Statement stmt = conn.createStatement();
+//        ResultSet rs = stmt.executeQuery(Query);
+//        System.out.println("====================\n\n");
+//
+//        while(rs.next()){
+//            String employeeManager = rs.getString("name");
+//            System.out.println(employeeManager);
+//            listAllEmployees(employeeManager);
+//        }
+//        System.out.println("====================\n\n");
+    }*/
 
     @Test
     public void getEmployeesInTeam() throws SQLException {
@@ -191,29 +199,6 @@ public class EmployeeServiceTest {
     @Test
     public void removeManager() throws Exception {
         String oldManager = "Sayed";
-        String Query = "SELECT * FROM employee WHERE name = '"+oldManager+"'";
-        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(Query);
-        String newManager = null;
-        while(rs.next()){
-            newManager = rs.getString("manager_name");
-        }
-        if(newManager != "NULL") {
-            Query = "SELECT * FROM employee WHERE manager_name = '" + oldManager + "'";
-            rs = stmt.executeQuery(Query);
-            while (rs.next()) {
-                String Query2 = "UPDATE employee SET manager_name = '" + newManager + "' WHERE manager_name = '"+oldManager+"'";
-                Statement stmt2 = conn.createStatement();
-                stmt2.executeUpdate(Query2);
-            }
-            Query = "DELETE FROM employee WHERE name = '"+oldManager+"'";
-            stmt.executeUpdate(Query);
-            System.out.println("Manager Deleted Succesfully");
-        }
-        else{
-            System.out.println("Can not Delete This Manager");
-        }
     }
 
 }

@@ -1,9 +1,9 @@
 package com.javatpoint.model;
+
 import javax.persistence.*;
 
 @Entity
-public class Employee
-{
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -14,7 +14,7 @@ public class Employee
     public String experience;
     public String department;
     public int grossSalary;
-    public int netSalary;
+    public double netSalary;
     public String teamName;
     public String managerName;
 
@@ -33,16 +33,16 @@ public class Employee
     }
 
     public static Employee updateEmployee(Employee oldEmployer, Employee newEmployer) {
-        if(newEmployer.name != null)oldEmployer.name = newEmployer.name;
-        if(newEmployer.gender != null)oldEmployer.gender = newEmployer.gender;
-        if(newEmployer.birthDate != 0)oldEmployer.birthDate = newEmployer.birthDate;
-        if(newEmployer.gradDate != 0)oldEmployer.gradDate = newEmployer.gradDate;
-        if(newEmployer.experience != null)oldEmployer.experience = newEmployer.experience;
-        if(newEmployer.department != null)oldEmployer.department = newEmployer.department;
-        if(newEmployer.grossSalary != 0)oldEmployer.grossSalary = newEmployer.grossSalary;
-        if(newEmployer.netSalary != 0)oldEmployer.netSalary = newEmployer.netSalary;
-        if(newEmployer.teamName != null)oldEmployer.teamName = newEmployer.teamName;
-        if(newEmployer.managerName != null)oldEmployer.managerName = newEmployer.managerName;
+        if (newEmployer.name != null) oldEmployer.name = newEmployer.name;
+        if (newEmployer.gender != null) oldEmployer.gender = newEmployer.gender;
+        if (newEmployer.birthDate != 0) oldEmployer.birthDate = newEmployer.birthDate;
+        if (newEmployer.gradDate != 0) oldEmployer.gradDate = newEmployer.gradDate;
+        if (newEmployer.experience != null) oldEmployer.experience = newEmployer.experience;
+        if (newEmployer.department != null) oldEmployer.department = newEmployer.department;
+        if (newEmployer.grossSalary != 0) oldEmployer.grossSalary = newEmployer.grossSalary;
+        if (newEmployer.netSalary != 0) oldEmployer.netSalary = newEmployer.netSalary;
+        if (newEmployer.teamName != null) oldEmployer.teamName = newEmployer.teamName;
+        if (newEmployer.managerName != null) oldEmployer.managerName = newEmployer.managerName;
         return oldEmployer;
     }
 
@@ -113,11 +113,11 @@ public class Employee
         this.grossSalary = grossSalary;
     }
 
-    public int getNetSalary() {
+    public double getNetSalary() {
         return netSalary;
     }
 
-    public void setNetSalary(int netSalary) {
+    public void setNetSalary(double netSalary) {
         this.netSalary = netSalary;
     }
 

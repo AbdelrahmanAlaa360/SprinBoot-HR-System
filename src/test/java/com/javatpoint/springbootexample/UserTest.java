@@ -36,7 +36,6 @@ public class UserTest {
         userRecord.setGender("Male");
         userRecord.setTeamName("Team 1");
         userRecord.setGrossSalary(5000);
-        userRecord.setNetSalary(4900);
         userRecord.setManagerName("Ahmed");
         userRecord.setGradDate(54);
 
@@ -47,6 +46,12 @@ public class UserTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
                 .andExpect(status().isOk()).andDo(print());
+
+
+
+        //select instered Employee
+        // assert inserted employee inserted with correct values
+
     }
 
 }
