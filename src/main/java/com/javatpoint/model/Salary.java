@@ -1,8 +1,10 @@
 package com.javatpoint.model;
+import java.util.Date;
 
 public class Salary {
     private double netSalary;
     private double grossSalary;
+
 
     public Salary(Employee employee) {
         if(employee != null){

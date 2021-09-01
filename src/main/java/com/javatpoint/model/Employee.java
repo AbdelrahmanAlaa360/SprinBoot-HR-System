@@ -17,8 +17,9 @@ public class Employee {
     public double netSalary;
     public String teamName;
     public String managerName;
+    public int joinYear;
 
-    public Employee(int id, String name, String gender, int birthDate, int gradDate, String experience, String department, int grossSalary, int netSalary, String teamName, String managerName) {
+    public Employee(int id, String name, String gender, int birthDate, int gradDate, String experience, String department, int grossSalary, int netSalary, String teamName, String managerName, int joinYear) {
         this.id = id;
         this.name = name;
         this.gender = gender;
@@ -30,6 +31,15 @@ public class Employee {
         this.netSalary = netSalary;
         this.teamName = teamName;
         this.managerName = managerName;
+        this.joinYear = joinYear;
+    }
+
+    public int getJoinYear() {
+        return joinYear;
+    }
+
+    public void setJoinYear(int joinYear) {
+        this.joinYear = joinYear;
     }
 
     public static Employee updateEmployee(Employee oldEmployer, Employee newEmployer) {
@@ -43,6 +53,7 @@ public class Employee {
         if (newEmployer.netSalary != 0) oldEmployer.netSalary = newEmployer.netSalary;
         if (newEmployer.teamName != null) oldEmployer.teamName = newEmployer.teamName;
         if (newEmployer.managerName != null) oldEmployer.managerName = newEmployer.managerName;
+        if (newEmployer.joinYear != 0) oldEmployer.joinYear = newEmployer.joinYear;
         return oldEmployer;
     }
 

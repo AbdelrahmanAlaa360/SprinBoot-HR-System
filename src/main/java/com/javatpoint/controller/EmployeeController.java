@@ -1,6 +1,8 @@
 package com.javatpoint.controller;
 
 import com.javatpoint.model.Salary;
+import com.javatpoint.model.Vacations;
+import com.javatpoint.service.VacationService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,5 +50,7 @@ public class EmployeeController {
         System.out.println(salary);
         return ResponseEntity.ok().build();
     }
+
+
 
 }

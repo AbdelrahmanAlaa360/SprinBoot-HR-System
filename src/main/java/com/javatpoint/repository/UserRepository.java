@@ -3,6 +3,7 @@ package com.javatpoint.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.javatpoint.model.Employee;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 

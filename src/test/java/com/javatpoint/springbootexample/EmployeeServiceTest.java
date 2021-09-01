@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Date;
+
 
 import javax.transaction.Transactional;
 
@@ -43,16 +45,20 @@ public class EmployeeServiceTest {
 
     @Test
     public void addEmployee() throws Exception {
-        Employee userRecord  = new Employee();
-        userRecord.setName("Sayed");
+        Date dt = new Date();
+        int year = dt.getYear() + 1900;
+
+        Employee userRecord = new Employee();
+        userRecord.setName("ahmed");
         userRecord.setBirthDate(2000);
         userRecord.setDepartment("CS");
         userRecord.setExperience("High");
         userRecord.setGender("Male");
-        userRecord.setTeamName("Team 51");
+        userRecord.setTeamName("Team 3");
         userRecord.setGrossSalary(5000);
-        userRecord.setManagerName("Tarek");
+        userRecord.setManagerName("fathi");
         userRecord.setGradDate(2019);
+        userRecord.setJoinYear(year);
 
         //Employee result = employeeService.addUser(userRecord);
 
@@ -60,15 +66,15 @@ public class EmployeeServiceTest {
         String body = objectMapper.writeValueAsString(userRecord);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/HR/add-user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
                 .andExpect(status().isOk()).andDo(print());
 
-        String Query = "SELECT * FROM employee WHERE name = '"+userRecord.getName()+"'";
+        String Query = "SELECT * FROM employee WHERE name = '" + userRecord.getName() + "'";
         Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(Query);
-        while(rs.next()){
+        while (rs.next()) {
             assertEquals(rs.getInt("gross_salary"), userRecord.getGrossSalary());
         }
     }
@@ -104,7 +110,7 @@ public class EmployeeServiceTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employee);
-        mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/"+id)
+        mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/" + id)
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
     }
@@ -122,7 +128,7 @@ public class EmployeeServiceTest {
     }
 
     public void listAllEmployees(String manager) throws SQLException {
-        if(manager != "NULL") {
+        if (manager != "NULL") {
             String Query = "SELECT * FROM employee WHERE manager_name = '" + manager + "'";
             Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
@@ -174,12 +180,12 @@ public class EmployeeServiceTest {
     @Test
     public void getEmployeesInTeam() throws SQLException {
         String teamName = "Team 51";
-        String Query = "SELECT * FROM employee WHERE team_name = '"+teamName+"'";
+        String Query = "SELECT * FROM employee WHERE team_name = '" + teamName + "'";
         Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(Query);
         System.out.println("Employers in " + teamName);
-        while(rs.next()){
+        while (rs.next()) {
             System.out.println(rs.getString("name"));
         }
     }
@@ -187,11 +193,11 @@ public class EmployeeServiceTest {
     @Test
     public void getEmployeesDirectly() throws SQLException {
         String managerName = "Abbas";
-        String Query = "SELECT * FROM employee WHERE manager_name = '"+managerName+"'";
+        String Query = "SELECT * FROM employee WHERE manager_name = '" + managerName + "'";
         Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(Query);
-        while(rs.next()){
+        while (rs.next()) {
             System.out.println(rs.getString("name"));
         }
     }
@@ -199,6 +205,7 @@ public class EmployeeServiceTest {
     @Test
     public void removeManager() throws Exception {
         String oldManager = "Sayed";
+        employeeService.removeManager(oldManager);
     }
 
 }

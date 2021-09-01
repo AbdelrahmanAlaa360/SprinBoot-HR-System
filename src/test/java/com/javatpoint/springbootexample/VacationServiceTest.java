@@ -1,0 +1,49 @@
+package com.javatpoint.springbootexample;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javatpoint.model.Vacations;
+import com.javatpoint.service.EmployeeService;
+import com.javatpoint.service.VacationService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.javatpoint.repository.vacationRepository;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class VacationServiceTest {
+    @Autowired
+    MockMvc mockMvc;
+
+    @Autowired
+    VacationService vacationService;
+    @Autowired
+    vacationRepository vacationRepository;
+
+
+    @Test
+    public void vacations() throws Exception {
+        Integer employeeId = 8, id = 8;
+        Vacations vacations = new Vacations();
+        vacations.setEmployee_name("Ahmed");
+        vacations.setEmployeeId(employeeId);
+        vacations.setYear(2021);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(vacations);
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/vacations/add-vacation/")
+                .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
+
+        //assertEquals(id, vacationRepository.findById(id));
+    }
+
+
+}
