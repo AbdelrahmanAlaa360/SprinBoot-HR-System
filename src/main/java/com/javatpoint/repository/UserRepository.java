@@ -3,10 +3,10 @@ package com.javatpoint.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.javatpoint.model.Employee;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -27,4 +27,9 @@ public interface UserRepository extends JpaRepository<Employee, Integer> {
                     "            select * from cte; "
             , nativeQuery = true)
     List<Employee> getAllEmployees(@Param("employeeId") int employeeId);
+
+
+    @Query(value = "SELECT join_year FROM employee WHERE id = :employeeId", nativeQuery = true)
+    int getJoinYear(int employeeId);
+
 }

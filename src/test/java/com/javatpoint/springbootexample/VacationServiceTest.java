@@ -1,5 +1,6 @@
 package com.javatpoint.springbootexample;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javatpoint.model.Vacations;
 import com.javatpoint.service.EmployeeService;
@@ -30,9 +31,9 @@ public class VacationServiceTest {
 
     @Test
     public void vacations() throws Exception {
-        Integer employeeId = 8, id = 8;
+        Integer employeeId = 4;
         Vacations vacations = new Vacations();
-        vacations.setEmployee_name("Ahmed");
+        vacations.setEmployee_name("7amada");
         vacations.setEmployeeId(employeeId);
         vacations.setYear(2021);
 
@@ -45,5 +46,15 @@ public class VacationServiceTest {
         //assertEquals(id, vacationRepository.findById(id));
     }
 
+    @Test
+    public void getVacation() throws Exception {
+        Integer employeeId = 4;
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/vacations/get-vacation/")
+                .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
+        //assertEquals(employeeId,vacationRepository.findById(employeeId));
+    }
 }

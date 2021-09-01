@@ -21,10 +21,13 @@ public class VacationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/get-vacations")
-    public ResponseEntity<Object> getVacations(@RequestBody String name) throws Exception {
-        int vacations = vacationService.getVacations(name);
-        System.out.println(vacations);
+    @GetMapping(value = "/get-vacation")
+    public ResponseEntity<Object> getVacations(@RequestBody Integer employeeId) throws Exception {
+        int vacations = vacationService.getVacations(employeeId);
+        System.out.println("==========");
+        System.out.println("Exceeded Leaves for Employee No " + employeeId + " is " + vacations + " Exceeded Leaves");
+        System.out.println("==========");
         return ResponseEntity.ok().build();
     }
+
 }
