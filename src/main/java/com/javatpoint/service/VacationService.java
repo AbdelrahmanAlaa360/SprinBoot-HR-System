@@ -20,10 +20,6 @@ public class VacationService {
     @Autowired
     public UserRepository userRepository;
 
-    final String DB_URL = "jdbc:mysql://localhost/phase1";
-    final String USER = "root";
-    final String PASS = "12345";
-
     public Vacations addVacation(Vacations vacations) throws Exception {
         Date dt = new Date();
         int currentYear = dt.getYear() + 1900;
@@ -33,7 +29,7 @@ public class VacationService {
         int joinYear = userRepository.getJoinYear(employeeId);
         int exceed = 0;
 
-        if (currentVacations >= 5) {
+        if (currentVacations >= 21) {
             if (currentVacations <= 30 && currentYear - joinYear >= 10) {
                 exceed = 0;
             } else {

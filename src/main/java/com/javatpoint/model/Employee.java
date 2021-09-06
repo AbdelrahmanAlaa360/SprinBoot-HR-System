@@ -13,13 +13,13 @@ public class Employee {
     public int gradDate;
     public String experience;
     public String department;
-    public int grossSalary;
+    public double grossSalary;
     public double netSalary;
     public String teamName;
     public String managerName;
     public int joinYear;
 
-    public Employee(int id, String name, String gender, int birthDate, int gradDate, String experience, String department, int grossSalary, int netSalary, String teamName, String managerName, int joinYear) {
+    public Employee(int id, String name, String gender, int birthDate, int gradDate, String experience, String department, double grossSalary, double netSalary, String teamName, String managerName, int joinYear) {
         this.id = id;
         this.name = name;
         this.gender = gender;
@@ -116,11 +116,11 @@ public class Employee {
         this.department = department;
     }
 
-    public int getGrossSalary() {
+    public double getGrossSalary() {
         return grossSalary;
     }
 
-    public void setGrossSalary(int grossSalary) {
+    public void setGrossSalary(double grossSalary) {
         this.grossSalary = grossSalary;
     }
 

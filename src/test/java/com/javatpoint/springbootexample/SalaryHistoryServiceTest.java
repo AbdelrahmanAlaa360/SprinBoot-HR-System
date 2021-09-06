@@ -1,60 +1,64 @@
 package com.javatpoint.springbootexample;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javatpoint.model.Vacations;
-import com.javatpoint.service.EmployeeService;
-import com.javatpoint.service.VacationService;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.javatpoint.model.SalaryHistory;
+import com.javatpoint.repository.SalaryHistoryRepository;
+import com.javatpoint.service.SalaryHistoryService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import com.javatpoint.repository.vacationRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class VacationServiceTest {
+//@DatabaseSetup("/data.xml")
+//@TestExecutionListeners({
+//        DependencyInjectionTestExecutionListener.class,
+//        DbUnitTestExecutionListener.class
+//})
+public class SalaryHistoryServiceTest {
     @Autowired
     MockMvc mockMvc;
 
     @Autowired
-    VacationService vacationService;
+    SalaryHistoryService salaryHistoryService;
     @Autowired
-    vacationRepository vacationRepository;
+    SalaryHistoryRepository salaryHistoryRepository;
 
 
     @Test
-    public void addVacation() throws Exception {
+    public void addSalaryHistory() throws Exception {
         Integer employeeId = 4;
-        Vacations vacations = new Vacations();
-        vacations.setEmployee_name("7amada");
-        vacations.setEmployeeId(employeeId);
-        vacations.setYear(2021);
+        SalaryHistory salaryHistory = new SalaryHistory();
+        salaryHistory.setEmployee_id(employeeId);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String body = objectMapper.writeValueAsString(vacations);
-        mockMvc.perform(MockMvcRequestBuilders.post("/HR/vacations/add-vacation/")
+        String body = objectMapper.writeValueAsString(salaryHistory);
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/salary-history/add/")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
-
-        //assertEquals(id, vacationRepository.findById(id));
     }
 
     @Test
-    public void getVacation() throws Exception {
+    public void getSalaryHistories() throws Exception{
         Integer employeeId = 4;
-
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
-        mockMvc.perform(MockMvcRequestBuilders.get("/HR/vacations/get-vacation/")
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-salary/")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
-        //assertEquals(employeeId,vacationRepository.findById(employeeId));
+        //assertEquals()
     }
+
 }
