@@ -3,6 +3,8 @@ package com.javatpoint.springbootexample;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.javatpoint.model.SalaryHistory;
 import com.javatpoint.repository.SalaryHistoryRepository;
 import com.javatpoint.service.SalaryHistoryService;
@@ -22,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@DatabaseSetup("/data.xml")
+@DatabaseSetup("/data.xml")
 //@TestExecutionListeners({
 //        DependencyInjectionTestExecutionListener.class,
 //        DbUnitTestExecutionListener.class
@@ -30,14 +32,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SalaryHistoryServiceTest {
     @Autowired
     MockMvc mockMvc;
-
     @Autowired
     SalaryHistoryService salaryHistoryService;
     @Autowired
     SalaryHistoryRepository salaryHistoryRepository;
 
-
     @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedAddSalaryHistory.xml")
     public void addSalaryHistory() throws Exception {
         Integer employeeId = 4;
         SalaryHistory salaryHistory = new SalaryHistory();
@@ -51,6 +52,7 @@ public class SalaryHistoryServiceTest {
     }
 
     @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
     public void getSalaryHistories() throws Exception{
         Integer employeeId = 4;
         ObjectMapper objectMapper = new ObjectMapper();

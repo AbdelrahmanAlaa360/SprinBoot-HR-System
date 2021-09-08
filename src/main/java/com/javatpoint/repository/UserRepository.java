@@ -1,5 +1,6 @@
 package com.javatpoint.repository;
 
+import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.javatpoint.model.Employee;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,8 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<Employee, Integer> {
 
+
+    //User findByUsername(String username);
 
     @Query(
             value = "with recursive cte as ( \n" +

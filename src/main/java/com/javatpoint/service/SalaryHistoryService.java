@@ -5,22 +5,21 @@ import com.javatpoint.model.SalaryHistory;
 import com.javatpoint.repository.SalaryHistoryRepository;
 import com.javatpoint.repository.UserRepository;
 import com.javatpoint.repository.vacationRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
 @Service
-public class SalaryHistoryService  {
+public class SalaryHistoryService {
     @Autowired
     public SalaryHistoryRepository salaryHistoryRepository;
     @Autowired
     public UserRepository userRepository;
     @Autowired
-
     public vacationRepository vacationRepository;
 
     public double vacationsDeducationCalculation(int employeeId) {
@@ -71,17 +70,17 @@ public class SalaryHistoryService  {
 
     public List<SalaryHistory> getSalaryHistories(Integer employeeId) {
         List<SalaryHistory> salaryHistory = salaryHistoryRepository.getSalaryHistories(employeeId);
-        for(SalaryHistory salaryHistory1: salaryHistory){
+        for (SalaryHistory salaryHistory1 : salaryHistory) {
             System.out.println(
-                    "Id: " + salaryHistory1.getEmployee_id() + " | Name: " +
-                    salaryHistory1.getEmployee_name() + " | Month: " +
-                    salaryHistory1.getMonth() + " | Year: " +
-                    salaryHistory1.getYear() + " | Bonus: " +
-                    salaryHistory1.getBonus() + " | Tax & Insurance: " +
-                    salaryHistory1.getTax_and_insurance() + "\nDeductions: " +
-                    salaryHistory1.getDeductions() + " | Gross Salary: " +
-                    salaryHistory1.getGross_salary() + " | Net Salary:" +
-                    salaryHistory1.getNet_salary() + "\n======"
+                    "Id: " +salaryHistory1.getEmployee_id() + " | Name: " +
+                            salaryHistory1.getEmployee_name() + " | Month: " +
+                            salaryHistory1.getMonth() + " | Year: " +
+                            salaryHistory1.getYear() + " | Bonus: " +
+                            salaryHistory1.getBonus() + " | Tax & Insurance: " +
+                            salaryHistory1.getTax_and_insurance() + "\nDeductions: " +
+                            salaryHistory1.getDeductions() + " | Gross Salary: " +
+                            salaryHistory1.getGross_salary() + " | Net Salary:" +
+                            salaryHistory1.getNet_salary() + "\n======"
             );
         }
         return salaryHistory;
