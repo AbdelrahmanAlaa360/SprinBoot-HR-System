@@ -7,21 +7,25 @@ create table department
 );
 
 -- auto-generated definition
+-- auto-generated definition
 create table employee
 (
-    grad_date    int          not null,
-    manager_name varchar(255) null,
-    team_name    varchar(255) null,
-    net_salary   int          not null,
-    department   varchar(255) null,
-    birth_date   int          not null,
-    name         varchar(255) null,
-    gross_salary int          not null,
-    gender       varchar(255) null,
-    experience   varchar(255) null,
     id           int auto_increment
-        primary key
+        primary key,
+    birth_date   int          not null,
+    department   varchar(255) null,
+    experience   varchar(255) null,
+    gender       varchar(255) null,
+    grad_date    int          not null,
+    gross_salary double       not null,
+    manager_name varchar(255) null,
+    name         varchar(255) null,
+    net_salary   double       not null,
+    team_name    varchar(255) null,
+    join_year    int          not null
 );
+
+
 
 -- auto-generated definition
 create table managers

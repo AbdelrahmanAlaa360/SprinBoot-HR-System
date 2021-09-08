@@ -25,10 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DatabaseSetup("/data.xml")
-//@TestExecutionListeners({
-//        DependencyInjectionTestExecutionListener.class,
-//        DbUnitTestExecutionListener.class
-//})
+@TestExecutionListeners({
+        DependencyInjectionTestExecutionListener.class,
+        DbUnitTestExecutionListener.class
+})
 public class SalaryHistoryServiceTest {
     @Autowired
     MockMvc mockMvc;
@@ -41,11 +41,8 @@ public class SalaryHistoryServiceTest {
     @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedAddSalaryHistory.xml")
     public void addSalaryHistory() throws Exception {
         Integer employeeId = 4;
-        SalaryHistory salaryHistory = new SalaryHistory();
-        salaryHistory.setEmployee_id(employeeId);
-
         ObjectMapper objectMapper = new ObjectMapper();
-        String body = objectMapper.writeValueAsString(salaryHistory);
+        String body = objectMapper.writeValueAsString(employeeId);
         mockMvc.perform(MockMvcRequestBuilders.post("/HR/salary-history/add/")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
@@ -60,7 +57,6 @@ public class SalaryHistoryServiceTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-salary/")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
-        //assertEquals()
     }
 
 }

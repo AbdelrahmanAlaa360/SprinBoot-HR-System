@@ -14,8 +14,8 @@ public class SalaryHistoryController {
     private SalaryHistoryService salaryHistoryService;
 
     @PostMapping(value = "/add")
-    public ResponseEntity addVacation(@RequestBody SalaryHistory salaryHistory) throws Exception {
-        salaryHistoryService.addSalary(salaryHistory.getEmployee_id());
+    public ResponseEntity addVacation(@RequestBody Integer employeeId) {
+        salaryHistoryService.addSalary(employeeId);
         return ResponseEntity.ok().build();
     }
 
