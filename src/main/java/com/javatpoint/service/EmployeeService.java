@@ -1,8 +1,6 @@
 package com.javatpoint.service;
 
 import com.javatpoint.model.Salary;
-import com.javatpoint.model.Vacations;
-import com.javatpoint.repository.vacationRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +8,6 @@ import com.javatpoint.model.Employee;
 import com.javatpoint.repository.UserRepository;
 
 import java.sql.*;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -65,9 +62,9 @@ public class EmployeeService {
     final String USER = "root";
     final String PASS = "12345";
 
-    public void removeManager(String oldManager) throws SQLException {
+    public void removeManager(Integer oldManager) throws SQLException {
 
-        String Query = "SELECT * FROM employee WHERE name = '" + oldManager + "'";
+        String Query = "SELECT * FROM employee WHERE id = '" + oldManager + "'";
         Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(Query);
@@ -89,6 +86,13 @@ public class EmployeeService {
         } else {
             System.out.println("Can not Delete This Manager");
         }
+    }
+
+    public Employee raiseSalary(Integer raise, Integer employeeId){
+        Employee employee = userRepository.getById(employeeId);
+        double grossSalary = employee.getGrossSalary();
+        employee.setGrossSalary(grossSalary + raise);
+        return userRepository.save(employee);
     }
 
 }

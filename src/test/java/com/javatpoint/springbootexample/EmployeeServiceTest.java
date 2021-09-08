@@ -1,8 +1,14 @@
 package com.javatpoint.springbootexample;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.javatpoint.model.Employee;
+import com.javatpoint.repository.UserRepository;
 import com.javatpoint.service.EmployeeService;
 import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -10,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -31,28 +39,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DatabaseSetup("/data.xml")
+@TestExecutionListeners({
+        DependencyInjectionTestExecutionListener.class,
+        DbUnitTestExecutionListener.class
+})
 public class EmployeeServiceTest {
-
     @Autowired
     MockMvc mockMvc;
-
     @Autowired
     EmployeeService employeeService;
+    @Autowired
+    UserRepository userRepository;
 
     final String DB_URL = "jdbc:mysql://localhost/phase1";
     final String USER = "root";
     final String PASS = "12345";
 
     @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedAddEmployee.xml")
     public void addEmployee() throws Exception {
         Date dt = new Date();
         int year = dt.getYear() + 1900;
 
         Employee userRecord = new Employee();
-        userRecord.setName("ahmed");
-        userRecord.setBirthDate(2000);
+        userRecord.setName("Mohammed");
+        userRecord.setBirthDate(1988);
         userRecord.setDepartment("CS");
-        userRecord.setExperience("High");
+        userRecord.setExperience("Senior");
         userRecord.setGender("Male");
         userRecord.setTeamName("Team 3");
         userRecord.setGrossSalary(5000);
@@ -64,24 +78,19 @@ public class EmployeeServiceTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(userRecord);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/HR/add-user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk()).andDo(print());
 
-        String Query = "SELECT * FROM employee WHERE name = '" + userRecord.getName() + "'";
-        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(Query);
-        while (rs.next()) {
-            //assertEquals(rs.getInt("gross_salary"), userRecord.getGrossSalary());
-        }
+        int actualNetSalary = userRepository.getNetSalary(5);
+        assertEquals(actualNetSalary, 3750);
     }
 
     @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedDeleteEmployee.xml")
     public void deleteEmployee() throws NotFoundException {
-        int id = 5;
+        int id = 4;
         Employee userRecord = employeeService.getUserById(id);
         System.out.println(userRecord.getId());
         employeeService.deleteUser(userRecord.getId());
@@ -90,28 +99,25 @@ public class EmployeeServiceTest {
 
     @Test
     public void getEmployeeInfo() throws NotFoundException {
-        int id = 1;
-        Employee result = employeeService.getUserById(1);
-        assertEquals(result.getId(), 1);
+        int id = 4;
+        Employee result = employeeService.getUserById(id);
+        assertEquals(result.getId(), 4);
     }
 
     @Test
     @Transactional
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedUpdateEmployee.xml")
     public void updateEmployee() throws Exception {
-        // Test is Failed
-        int id = 2;
+        int id = 4;
         Employee employee = new Employee();
         employee.setName("Abdo");
-        employee.setGrossSalary(15000);
-        employee.setNetSalary(14000);
-
-        Employee employeeToUpdate = new Employee();
-        employeeToUpdate.setName("Abdelrahman");
+        employee.setGrossSalary(10000);
+        employee.setNetSalary(9000);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employee);
         mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/" + id)
-                .contentType(MediaType.APPLICATION_JSON).content(body))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
     }
 
@@ -122,8 +128,8 @@ public class EmployeeServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(3);
         mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-salary")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(3)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(3)))
                 .andExpect(status().isOk());
     }
 
@@ -203,9 +209,22 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedRemoveManager.xml")
     public void removeManager() throws Exception {
-        String oldManager = "Sayed";
-        employeeService.removeManager(oldManager);
+        Integer oldManagerId = 4;
+        employeeService.removeManager(oldManagerId);
+    }
+
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedSalaryRaise.xml")
+    public void salaryRaise() throws Exception {
+        Integer employeeId = 4, raise = 2000;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.put("/HR/raise-salary/" + employeeId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(raise)))
+                .andExpect(status().isOk());
     }
 
 }

@@ -23,7 +23,7 @@ public class VacationController {
 
     @GetMapping(value = "/get-vacation")
     public ResponseEntity<Object> getVacations(@RequestBody Integer employeeId) throws Exception {
-        int vacations = vacationService.getVacations(employeeId);
+        int vacations = vacationService.getExceededVacations(employeeId);
         System.out.println("==========");
         System.out.println("Exceeded Leaves for Employee No " + employeeId + " is " + vacations + " Exceeded Leaves");
         System.out.println("==========");

@@ -40,4 +40,7 @@ public interface UserRepository extends JpaRepository<Employee, Integer> {
 
     @Query(value = "SELECT * FROM employee WHERE id = :employeeId", nativeQuery = true)
     Employee getEmployee(int employeeId);
+
+    @Query(value = "SELECT net_salary FROM employee WHERE id = :employeeId", nativeQuery = true)
+    Integer getNetSalary(int employeeId);
 }

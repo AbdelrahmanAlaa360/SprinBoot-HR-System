@@ -2,6 +2,10 @@ package com.javatpoint.springbootexample;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.javatpoint.model.Vacations;
 import com.javatpoint.service.EmployeeService;
 import com.javatpoint.service.VacationService;
@@ -10,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.javatpoint.repository.vacationRepository;
@@ -19,17 +25,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DatabaseSetup("/data.xml")
+@TestExecutionListeners({
+        DependencyInjectionTestExecutionListener.class,
+        DbUnitTestExecutionListener.class
+})
 public class VacationServiceTest {
     @Autowired
     MockMvc mockMvc;
-
     @Autowired
     VacationService vacationService;
     @Autowired
     vacationRepository vacationRepository;
 
-
     @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedAddVacation.xml")
     public void addVacation() throws Exception {
         Integer employeeId = 4;
         Vacations vacations = new Vacations();
@@ -47,9 +57,8 @@ public class VacationServiceTest {
     }
 
     @Test
-    public void getVacation() throws Exception {
+    public void getExceededVacations() throws Exception {
         Integer employeeId = 4;
-
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
         mockMvc.perform(MockMvcRequestBuilders.get("/HR/vacations/get-vacation/")

@@ -1,8 +1,6 @@
 package com.javatpoint.controller;
 
 import com.javatpoint.model.Salary;
-import com.javatpoint.model.Vacations;
-import com.javatpoint.service.VacationService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +49,11 @@ public class EmployeeController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping(value = "/raise-salary/{id}")
+    public ResponseEntity<Object> raiseSalary(@RequestBody Integer raise, @PathVariable("id") Integer id) throws NotFoundException {
+        employeeService.raiseSalary(raise, id);
+        return ResponseEntity.ok().build();
+    }
 
 
 }

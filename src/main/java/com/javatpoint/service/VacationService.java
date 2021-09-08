@@ -42,7 +42,7 @@ public class VacationService {
     }
 
 
-    public int getVacations(Integer id) throws Exception {
+    public int getExceededVacations(Integer id) throws Exception {
         Date dt = new Date();
         int currentYear = dt.getYear() + 1900;
         int exceededLeaves = vacationRepository.countExceededVacations(id, currentYear);
