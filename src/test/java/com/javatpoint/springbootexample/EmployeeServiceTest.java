@@ -108,28 +108,27 @@ public class EmployeeServiceTest {
     @Transactional
     @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedUpdateEmployee.xml")
     public void updateEmployee() throws Exception {
-        int id = 4;
+        int employeeId = 4;
         Employee employee = new Employee();
-        employee.setName("Abdo");
+        employee.setExperience("Senior");
         employee.setGrossSalary(10000);
-        employee.setNetSalary(9000);
-
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employee);
-        mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/" + id)
-                        .contentType(MediaType.APPLICATION_JSON).content(body))
+        mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/" + employeeId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     @Transactional
     public void getEmployeeSalary() throws Exception {
-        int id = 2;
+        int id = 4;
         ObjectMapper objectMapper = new ObjectMapper();
-        String body = objectMapper.writeValueAsString(3);
+        String body = objectMapper.writeValueAsString(id);
         mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-salary")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(3)))
+                .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
     }
 

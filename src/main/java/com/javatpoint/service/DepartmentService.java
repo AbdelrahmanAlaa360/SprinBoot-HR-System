@@ -12,10 +12,11 @@ public class DepartmentService {
     @Autowired
     public DepartmentRepository departmentRepository;
 
-    public Department saveEmployee(Department department) throws NotFoundException {
-        if(departmentRepository.existsById(department.getDepartment_id())){
-            throw new NotFoundException("Deprtment Already Exists");
-        }
-        return departmentRepository.save(department);
+    public Department saveDepartment(Department department) {
+//        if(departmentRepository.existsById(department.getDepartment_id())){
+//            throw new NotFoundException("Deprtment Already Exists");
+//        }
+        departmentRepository.save(department);
+        return department;
     }
 }

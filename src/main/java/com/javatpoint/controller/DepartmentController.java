@@ -18,8 +18,8 @@ public class DepartmentController {
     DepartmentService departmentService;
 
     @PostMapping(value = "/add-department")
-    public ResponseEntity addEmployee(@RequestBody Department department) throws NotFoundException {
-        Department department1 = departmentService.saveEmployee(department);
+    public ResponseEntity addDepartment(@RequestBody Department department) throws NotFoundException {
+        departmentService.saveDepartment(department);
         return ResponseEntity.ok().build();
     }
 

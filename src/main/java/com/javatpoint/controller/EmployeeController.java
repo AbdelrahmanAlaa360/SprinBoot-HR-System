@@ -1,6 +1,7 @@
 package com.javatpoint.controller;
 
 import com.javatpoint.model.Salary;
+import com.javatpoint.repository.UserRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,12 @@ import com.javatpoint.service.EmployeeService;
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    public UserRepository userRepository;
 
     @RequestMapping("/HR")
     public ResponseEntity<Employee> getAllUser(int id) throws NotFoundException {
-        Employee employer = employeeService.getUserById(id);
+        employeeService.getUserById(id);
         return ResponseEntity.ok().build();
     }
 
@@ -26,9 +29,9 @@ public class EmployeeController {
     }*/
 
     @PutMapping(value = "/update-user/{id}")
-    public ResponseEntity<Employee> updateUser(@RequestBody Employee modifiedEmployee, @PathVariable("id") Integer id) throws NotFoundException {
-        Employee originalEmployee = employeeService.getUserById(id);
-        return ResponseEntity.ok(employeeService.updateUser(modifiedEmployee, originalEmployee));
+    public ResponseEntity<Employee> updateUser(@RequestBody Employee employee, @PathVariable("id") Integer id) throws NotFoundException {
+        employeeService.updateUser(employee, id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/add-user")

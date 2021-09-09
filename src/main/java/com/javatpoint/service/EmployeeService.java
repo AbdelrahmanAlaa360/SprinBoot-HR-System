@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 import com.javatpoint.model.Employee;
 import com.javatpoint.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.sql.*;
 import java.util.List;
+
+import static com.javatpoint.model.Employee.updateEmployee;
 
 @Service
 public class EmployeeService {
@@ -44,8 +47,10 @@ public class EmployeeService {
         return userRepository.existsById(id);
     }
 
-    public Employee updateUser(Employee updatedEmployee, Employee originalEmployee) throws NotFoundException {
-        Employee.updateEmployee(updatedEmployee, originalEmployee);
+    @Transactional
+    public Employee updateUser(Employee updatedEmployee, Integer oldEmployeeId) throws NotFoundException {
+        Employee originalEmployee = userRepository.getById(oldEmployeeId);
+        originalEmployee = updateEmployee(updatedEmployee, originalEmployee);
         return userRepository.save(originalEmployee);
     }
 
@@ -88,7 +93,7 @@ public class EmployeeService {
         }
     }
 
-    public Employee raiseSalary(Integer raise, Integer employeeId){
+    public Employee raiseSalary(Integer raise, Integer employeeId) {
         Employee employee = userRepository.getById(employeeId);
         double grossSalary = employee.getGrossSalary();
         employee.setGrossSalary(grossSalary + raise);
