@@ -49,8 +49,10 @@ public class Employee {
         if (newEmployer.gradDate != 0) oldEmployer.gradDate = newEmployer.gradDate;
         if (newEmployer.experience != null) oldEmployer.experience = newEmployer.experience;
         if (newEmployer.department != null) oldEmployer.department = newEmployer.department;
-        if (newEmployer.grossSalary != 0) oldEmployer.grossSalary = newEmployer.grossSalary;
-        if (newEmployer.netSalary != 0) oldEmployer.netSalary = (newEmployer.grossSalary * 0.15) - 500;
+        if (newEmployer.grossSalary >= 0) {
+            oldEmployer.grossSalary = newEmployer.grossSalary;
+            oldEmployer.netSalary = newEmployer.grossSalary - (newEmployer.grossSalary * 0.15) - 500;
+        }
         if (newEmployer.teamName != null) oldEmployer.teamName = newEmployer.teamName;
         if (newEmployer.managerName != null) oldEmployer.managerName = newEmployer.managerName;
         if (newEmployer.joinYear != 0) oldEmployer.joinYear = newEmployer.joinYear;

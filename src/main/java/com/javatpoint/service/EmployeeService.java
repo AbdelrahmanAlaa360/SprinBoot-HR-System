@@ -49,7 +49,7 @@ public class EmployeeService {
 
     @Transactional
     public Employee updateUser(Employee updatedEmployee, Integer oldEmployeeId) throws NotFoundException {
-        Employee originalEmployee = userRepository.getById(oldEmployeeId);
+        Employee originalEmployee = userRepository.getEmployee(oldEmployeeId);
         originalEmployee = updateEmployee(updatedEmployee, originalEmployee);
         return userRepository.save(originalEmployee);
     }

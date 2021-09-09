@@ -7,8 +7,10 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.javatpoint.ApacheDerbyExampleApplication;
 import com.javatpoint.model.Department;
+import com.javatpoint.model.Employee;
 import com.javatpoint.repository.DepartmentRepository;
 import com.javatpoint.service.DepartmentService;
+import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,10 +32,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(classes = ApacheDerbyExampleApplication.class)
 @DatabaseSetup("/data.xml")
-//@TestExecutionListeners({
-//        DependencyInjectionTestExecutionListener.class,
-//        DbUnitTestExecutionListener.class
-//})
+@TestExecutionListeners({
+        DependencyInjectionTestExecutionListener.class,
+        DbUnitTestExecutionListener.class
+})
 public class DepartmentServiceTest {
     @Autowired
     MockMvc mockMvc;

@@ -3,7 +3,7 @@
     <salary_history id="4" employee_name = "7amada" tax_and_insurance = "700" deductions = "300" gross_salary="5000" net_salary="4500" employee_id="4" month="9" year="2021" bonus="500"/>
     <salary_history id="5" employee_name = "7amada" tax_and_insurance = "700" deductions = "300" gross_salary="5000" net_salary="4500" employee_id="4" month="10" year="2021" bonus="500"/>
     <salary_history id="6" employee_name = "7amada" tax_and_insurance = "700" deductions = "300" gross_salary="5000" net_salary="4500" employee_id="4" month="10" year="2021" bonus="500"/>
-    <employee id="4" birth_date="1999" department="CS" experience="Moderate" gender="Male" grad_date="2010" gross_salary="10000" manager_name="Ali" name="Abdo" net_salary="9000" team_name="team1" join_year="2019"/>
+    <employee id="4" birth_date="1999" department="CS" experience="Moderate" gender="Male" grad_date="2010" gross_salary="10000" manager_name="Ali" name="7amada" net_salary="8000" team_name="team1" join_year="2019"/>
     <vacations id="2" employee_name="7amada" year="2021" exceeded="1" employee_id="4"/>
     <vacations id="3" employee_name="7amada" year="2021" exceeded="1" employee_id="4"/>
     <vacations id="4" employee_name="7amada" year="2021" exceeded="0" employee_id="4"/>

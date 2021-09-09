@@ -79,8 +79,8 @@ public class EmployeeServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(userRecord);
         mockMvc.perform(MockMvcRequestBuilders.post("/HR/add-user")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
                 .andExpect(status().isOk()).andDo(print());
 
         int actualNetSalary = userRepository.getNetSalary(5);
@@ -108,16 +108,14 @@ public class EmployeeServiceTest {
     @Transactional
     @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedUpdateEmployee.xml")
     public void updateEmployee() throws Exception {
-        int employeeId = 4;
+        Integer employeeId = 4;
         Employee employee = new Employee();
-        employee.setExperience("Senior");
         employee.setGrossSalary(10000);
         ObjectMapper objectMapper = new ObjectMapper();
-        String body = objectMapper.writeValueAsString(employee);
+        String body = objectMapper.writeValueAsString(employeeId);
         mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/" + employeeId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
-                .andDo(print())
+                .content(objectMapper.writeValueAsString(employee)))
                 .andExpect(status().isOk());
     }
 

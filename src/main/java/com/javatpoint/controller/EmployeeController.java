@@ -29,7 +29,7 @@ public class EmployeeController {
     }*/
 
     @PutMapping(value = "/update-user/{id}")
-    public ResponseEntity<Employee> updateUser(@RequestBody Employee employee, @PathVariable("id") Integer id) throws NotFoundException {
+    public ResponseEntity updateUser(@RequestBody Employee employee, @PathVariable("id") Integer id) throws NotFoundException {
         employeeService.updateUser(employee, id);
         return ResponseEntity.ok().build();
     }
