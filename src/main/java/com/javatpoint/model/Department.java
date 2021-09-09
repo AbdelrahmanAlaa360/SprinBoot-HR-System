@@ -8,9 +8,14 @@ import java.util.Set;
 public class Department {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int department_id;
     String department_name;
+
+    public Department(int department_id, String department_name) {
+        this.department_id = department_id;
+        this.department_name = department_name;
+    }
 
     public Department() {
     }
@@ -30,5 +35,4 @@ public class Department {
     public void setDepartment_name(String department_name) {
         this.department_name = department_name;
     }
-
 }

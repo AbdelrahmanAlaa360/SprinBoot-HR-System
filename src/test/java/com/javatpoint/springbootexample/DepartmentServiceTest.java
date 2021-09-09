@@ -7,6 +7,7 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.javatpoint.ApacheDerbyExampleApplication;
 import com.javatpoint.model.Department;
+import com.javatpoint.repository.DepartmentRepository;
 import com.javatpoint.service.DepartmentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,17 +36,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //})
 public class DepartmentServiceTest {
     @Autowired
-    private MockMvc mockMvc;
-
+    MockMvc mockMvc;
     @Autowired
-    private DepartmentService departmentService;
+    DepartmentService departmentService;
+    @Autowired
+    DepartmentRepository departmentRepository;
 
     @Test
     @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedAddDepartment.xml")
     public void addDepartment() throws Exception {
         Department department = new Department();
-        department.setDepartment_name("Dept2");
-        department.setDepartment_id(2);
+        department.setDepartment_name("Dept1");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(department);

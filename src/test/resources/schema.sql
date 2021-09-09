@@ -1,10 +1,12 @@
 -- auto-generated definition
+-- auto-generated definition
 create table department
 (
-    department_name varchar(255) null,
-    department_id   int          not null
-        primary key
+    department_id   int  auto_increment
+            primary key,
+    department_name varchar(255) null
 );
+
 
 -- auto-generated definition
 -- auto-generated definition
