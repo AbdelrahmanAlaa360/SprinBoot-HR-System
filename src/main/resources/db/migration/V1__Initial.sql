@@ -3,7 +3,7 @@
 create table department
 (
     department_id   int  auto_increment
-            primary key,
+        primary key,
     department_name varchar(255) null
 );
 
