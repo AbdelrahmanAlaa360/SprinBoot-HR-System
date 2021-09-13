@@ -1,7 +1,5 @@
 package com.javatpoint.springbootexample;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -9,13 +7,18 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.javatpoint.model.Employee;
 import com.javatpoint.repository.UserRepository;
+import com.javatpoint.repository.UsersAccountRepository;
 import com.javatpoint.service.EmployeeService;
 import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.web.servlet.HttpBasicDsl;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,12 +36,15 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.RequestPostProcessor.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @DatabaseSetup("/data.xml")
 @TestExecutionListeners({
         DependencyInjectionTestExecutionListener.class,
@@ -51,6 +57,8 @@ public class EmployeeServiceTest {
     EmployeeService employeeService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UsersAccountRepository usersAccountRepository;
 
     final String DB_URL = "jdbc:mysql://localhost/phase1";
     final String USER = "root";
@@ -74,13 +82,12 @@ public class EmployeeServiceTest {
         userRecord.setGradDate(2019);
         userRecord.setJoinYear(year);
 
-        //Employee result = employeeService.addUser(userRecord);
-
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(userRecord);
         mockMvc.perform(MockMvcRequestBuilders.post("/HR/add-user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
                 .andExpect(status().isOk()).andDo(print());
 
         int actualNetSalary = userRepository.getNetSalary(5);
@@ -114,8 +121,8 @@ public class EmployeeServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
         mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/" + employeeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(employee)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(employee)))
                 .andExpect(status().isOk());
     }
 
@@ -126,7 +133,7 @@ public class EmployeeServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(id);
         mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-salary")
-                .contentType(MediaType.APPLICATION_JSON).content(body))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
     }
 
@@ -219,8 +226,8 @@ public class EmployeeServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
         mockMvc.perform(MockMvcRequestBuilders.put("/HR/raise-salary/" + employeeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(raise)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(raise)))
                 .andExpect(status().isOk());
     }
 

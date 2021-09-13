@@ -1,7 +1,6 @@
 package com.javatpoint.security;
 
 import com.javatpoint.model.UsersAccount;
-import org.apache.catalina.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,19 +8,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collector;
 
-public class UserSecurity implements UserDetails {
+
+public class UserSecurityDetails implements UserDetails {
     private UsersAccount usersAccount;
 
-    public UserSecurity(UsersAccount usersAccount){
+    public UserSecurityDetails(UsersAccount usersAccount) {
         this.usersAccount = usersAccount;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        GrantedAuthority auth = new SimpleGrantedAuthority("ROLE_"+ usersAccount.getRole());
+        GrantedAuthority auth = new SimpleGrantedAuthority("ROLE_" + usersAccount.getRole());
         authorities.add(auth);
         return authorities;
     }
@@ -38,21 +37,21 @@ public class UserSecurity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

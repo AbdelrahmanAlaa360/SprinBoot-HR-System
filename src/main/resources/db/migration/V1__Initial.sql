@@ -1,6 +1,6 @@
 -- auto-generated definition
 -- auto-generated definition
-create table department
+create table if not exists department
 (
     department_id   int  auto_increment
         primary key,
@@ -26,7 +26,6 @@ create table employee
     team_name    varchar(255) null,
     join_year    int          not null
 );
-
 
 
 -- auto-generated definition

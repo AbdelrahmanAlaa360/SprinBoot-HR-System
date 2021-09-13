@@ -1,17 +1,17 @@
 package com.javatpoint.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class UsersAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(unique = true, nullable = false)
     private String user_name;
+    @Column(nullable=false)
     private String password;
+    @Column(nullable=false)
     private String role;
 
     public UsersAccount(Integer id, String user_name, String password, String role) {
