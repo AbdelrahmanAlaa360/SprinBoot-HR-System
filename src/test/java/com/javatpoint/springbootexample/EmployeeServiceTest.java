@@ -131,7 +131,7 @@ public class EmployeeServiceTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
+
     public void getAllEmployeesUnderManager() throws Exception {
         Integer managerId = 4;
         ObjectMapper objectMapper = new ObjectMapper();

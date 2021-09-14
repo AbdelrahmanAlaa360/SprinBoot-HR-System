@@ -37,6 +37,13 @@ public class EmployeeController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping(value = "/get-employee/{id}")
+    public ResponseEntity<Object> getEmployee(@PathVariable("id") Integer id) throws NotFoundException {
+        Employee employee = employeeService.getUserById(id);
+        return ResponseEntity.ok(employee);
+    }
+
+
     @PostMapping(value = "/delete-user")
     public void deleteUser(@RequestBody int id) {
         employeeService.deleteUser(id);

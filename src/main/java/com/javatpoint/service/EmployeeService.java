@@ -1,5 +1,7 @@
 package com.javatpoint.service;
 
+import com.javatpoint.Exceptions.EmployeeNotFoundException;
+import com.javatpoint.Exceptions.NegativeSalaryException;
 import com.javatpoint.model.Salary;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ public class EmployeeService {
     public Employee getUserById(int id) throws NotFoundException {
         Employee employee = userRepository.findById(id).orElse(null);
         if (employee == null) {
-            throw new NotFoundException("Not Found");
+            throw new EmployeeNotFoundException("Employee Not Found");
         }
         return employee;
     }
@@ -31,17 +33,21 @@ public class EmployeeService {
             double tax = 0.15, insurance = 500;
             double netSalary = userRecord.grossSalary - (userRecord.grossSalary * tax) - insurance;
             if (netSalary <= 0) {
-                throw new Exception("Netsalary Can't be less than zero");
+                throw new NegativeSalaryException("Netsalary Can't be less than zero");
             }
             userRecord.setNetSalary(netSalary);
         } else {
-            throw new Exception("Gross Salary Must be greater than zero");
+            throw new NegativeSalaryException("Gross Salary Must be greater than zero");
         }
         userRepository.save(userRecord);
         return userRecord;
     }
 
     public void deleteUser(int userId) {
+        Employee employee = userRepository.findById(userId).orElse(null);
+        if(employee == null){
+            throw new EmployeeNotFoundException("Employee Does Not Exist");
+        }
         userRepository.deleteById(userId);
     }
 
