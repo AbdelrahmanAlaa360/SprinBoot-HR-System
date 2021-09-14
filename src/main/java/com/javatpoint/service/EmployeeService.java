@@ -19,9 +19,11 @@ public class EmployeeService {
     public UserRepository userRepository;
 
     public Employee getUserById(int id) throws NotFoundException {
-        if (!userRepository.existsById(id))
+        Employee employee = userRepository.findById(id).orElse(null);
+        if (employee == null) {
             throw new NotFoundException("Not Found");
-        return userRepository.getById(id);
+        }
+        return employee;
     }
 
     public Employee addUser(Employee userRecord) throws Exception {
@@ -61,6 +63,15 @@ public class EmployeeService {
 
     public List<Employee> getAllEmployeesUnderManager(Integer managerId) {
         return userRepository.getAllEmployees(managerId);
+    }
+
+    public List<String> getEmployeesUnderSpecificManager(String managerName) {
+        return userRepository.getEmployeesUnderSpecificManager(managerName);
+    }
+
+    public List<String> getEmployeesInTeam(String teamName) {
+        List<String> employeesInTeam = userRepository.getEmployeesInTeam(teamName);
+        return employeesInTeam;
     }
 
     final String DB_URL = "jdbc:mysql://localhost/phase1";

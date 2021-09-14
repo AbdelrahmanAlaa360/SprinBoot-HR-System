@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.javatpoint.model.Employee;
 import com.javatpoint.service.EmployeeService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/HR")
 public class EmployeeController {
@@ -22,11 +24,6 @@ public class EmployeeController {
         employeeService.getUserById(id);
         return ResponseEntity.ok().build();
     }
-
-    /*@PostMapping(value = "/update-user")
-    public ResponseEntity updateUser(int id) {
-        Employer newEmployee = employeeService.getEmployeeInfo
-    }*/
 
     @PutMapping(value = "/update-user/{id}")
     public ResponseEntity updateUser(@RequestBody Employee employee, @PathVariable("id") Integer id) throws NotFoundException {
@@ -45,11 +42,29 @@ public class EmployeeController {
         employeeService.deleteUser(id);
     }
 
-    @GetMapping(value = "/get-salary")
-    public ResponseEntity<Object> getEmployeeSalary(@RequestBody int id) throws NotFoundException {
+    @GetMapping(value = "/get-salary/{id}")
+    public ResponseEntity<Object> getEmployeeSalary(@PathVariable("id") Integer id) throws NotFoundException {
         Salary salary = employeeService.getSalary(id);
-        System.out.println(salary);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(salary);
+    }
+
+    @GetMapping(value = "/get-employees-in-team")
+    public ResponseEntity<Object> getEmployeesInTeam(@RequestBody String teamName) {
+        List<String> l = employeeService.getEmployeesInTeam(teamName);
+        return ResponseEntity.ok(l);
+    }
+
+    // All Employees Under Manager
+    @GetMapping(value = "/get-employees-under-manager")
+    public ResponseEntity<Object> getAllEmployeesUnderManager(@RequestBody Integer managerId) {
+        List<Employee> l = employeeService.getAllEmployeesUnderManager(managerId);
+        return ResponseEntity.ok(l);
+    }
+
+    @GetMapping(value = "/get-employees-under-specific-manager")
+    public ResponseEntity<Object> getEmployeesUnderSpecificManager(String name){
+        List<String> l = employeeService.getEmployeesUnderSpecificManager(name);
+        return ResponseEntity.ok(l);
     }
 
     @PutMapping(value = "/raise-salary/{id}")

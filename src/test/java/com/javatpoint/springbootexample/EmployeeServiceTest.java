@@ -10,19 +10,15 @@ import com.javatpoint.repository.UserRepository;
 import com.javatpoint.repository.UsersAccountRepository;
 import com.javatpoint.service.EmployeeService;
 import javassist.NotFoundException;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.web.servlet.HttpBasicDsl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Date;
@@ -31,16 +27,14 @@ import java.util.Date;
 import javax.transaction.Transactional;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.RequestPostProcessor.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -59,10 +53,6 @@ public class EmployeeServiceTest {
     UserRepository userRepository;
     @Autowired
     UsersAccountRepository usersAccountRepository;
-
-    final String DB_URL = "jdbc:mysql://localhost/phase1";
-    final String USER = "root";
-    final String PASS = "12345";
 
     @Test
     @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/expectedAddEmployee.xml")
@@ -90,8 +80,8 @@ public class EmployeeServiceTest {
                         .content(body))
                 .andExpect(status().isOk()).andDo(print());
 
-        int actualNetSalary = userRepository.getNetSalary(5);
-        assertEquals(actualNetSalary, 3750);
+//        int actualNetSalary = userRepository.getNetSalary(5);
+//        assertEquals(actualNetSalary, 3750);
     }
 
     @Test
@@ -121,9 +111,11 @@ public class EmployeeServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
         mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/" + employeeId)
+                        .with(httpBasic("hr", "hr123"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(employee)))
                 .andExpect(status().isOk());
+
     }
 
     @Test
@@ -132,23 +124,25 @@ public class EmployeeServiceTest {
         int id = 4;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(id);
-        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-salary")
-                        .contentType(MediaType.APPLICATION_JSON).content(body))
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-salary/" + id)
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
                 .andExpect(status().isOk());
     }
 
-    public void listAllEmployees(String manager) throws SQLException {
-        if (manager != "NULL") {
-            String Query = "SELECT * FROM employee WHERE manager_name = '" + manager + "'";
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(Query);
-            String employeeManager = null;
-            while (rs.next()) {
-                employeeManager = rs.getString("name");
-                System.out.println(employeeManager);
-            }
-        }
+    @Test
+    public void getAllEmployeesUnderManager() throws Exception {
+        Integer managerId = 4;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(managerId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-employees-under-manager")
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk());
+        //List<Employee> employeesUnderManager = userRepository.getAllEmployees(managerId);
+        //assertEquals(employeesUnderManager.get(0), (""));
     }
 
     /*@Test
@@ -188,28 +182,34 @@ public class EmployeeServiceTest {
     }*/
 
     @Test
-    public void getEmployeesInTeam() throws SQLException {
-        String teamName = "Team 51";
-        String Query = "SELECT * FROM employee WHERE team_name = '" + teamName + "'";
-        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(Query);
-        System.out.println("Employers in " + teamName);
-        while (rs.next()) {
-            System.out.println(rs.getString("name"));
-        }
+    public void getEmployeesInTeam() throws Exception {
+        String teamName = "team1";
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(teamName);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-employees-in-team")
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk());
+
+        List<String> employeesInTeam = userRepository.getEmployeesInTeam(teamName);
+        assertEquals(employeesInTeam.get(0), ("7amada"));
     }
 
     @Test
-    public void getEmployeesDirectly() throws SQLException {
-        String managerName = "Abbas";
-        String Query = "SELECT * FROM employee WHERE manager_name = '" + managerName + "'";
-        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(Query);
-        while (rs.next()) {
-            System.out.println(rs.getString("name"));
-        }
+    @DatabaseSetup("/getEmployeesUnderSpecificManager.xml")
+    public void getEmployeesUnderSpecificManager() throws Exception {
+        String managerName = "7amada";
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(managerName);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-employees-under-specific-manager")
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk());
+
+        List<String> employees = userRepository.getEmployeesUnderSpecificManager(managerName);
+        assertEquals(employees.get(0), ("mohamed"));
     }
 
     @Test
@@ -226,9 +226,13 @@ public class EmployeeServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
         mockMvc.perform(MockMvcRequestBuilders.put("/HR/raise-salary/" + employeeId)
+                        .with(httpBasic("admin", "admin123"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(raise)))
                 .andExpect(status().isOk());
+
+        double expectedSalary = userRepository.findById(employeeId).orElseGet(null).getGrossSalary();
+        assertEquals(expectedSalary, 7000);
     }
 
 }
