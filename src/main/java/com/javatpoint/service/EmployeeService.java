@@ -52,17 +52,27 @@ public class EmployeeService {
     }
 
     public boolean existsById(Integer id) {
+        Employee employee = userRepository.findById(id).orElse(null);
+        if (employee == null) {
+            return false;
+        }
         return userRepository.existsById(id);
     }
 
     @Transactional
     public Employee updateUser(Employee updatedEmployee, Integer oldEmployeeId) throws NotFoundException {
+        if(!existsById(oldEmployeeId)){
+            throw new EmployeeNotFoundException("Employee Not Found");
+        }
         Employee originalEmployee = userRepository.getEmployee(oldEmployeeId);
         originalEmployee = updateEmployee(updatedEmployee, originalEmployee);
         return userRepository.save(originalEmployee);
     }
 
     public Salary getSalary(int id) throws NotFoundException {
+        if(!existsById(id)){
+            throw new EmployeeNotFoundException("Employee Not Found");
+        }
         Employee employee = getUserById(id);
         return new Salary(employee);
     }
@@ -86,17 +96,12 @@ public class EmployeeService {
 
     public void removeManager(Integer oldManager) throws SQLException {
 
-        String Query = "SELECT * FROM employee WHERE id = '" + oldManager + "'";
         Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(Query);
-        String newManager = null;
-        while (rs.next()) {
-            newManager = rs.getString("manager_name");
-        }
+        String newManager = userRepository.getManagerName(oldManager);
         if (newManager != "NULL") {
-            Query = "SELECT * FROM employee WHERE manager_name = '" + oldManager + "'";
-            rs = stmt.executeQuery(Query);
+            String Query = "SELECT * FROM employee WHERE manager_name = '" + oldManager + "'";
+            ResultSet rs = stmt.executeQuery(Query);
             while (rs.next()) {
                 String Query2 = "UPDATE employee SET manager_name = '" + newManager + "' WHERE manager_name = '" + oldManager + "'";
                 Statement stmt2 = conn.createStatement();
@@ -111,6 +116,9 @@ public class EmployeeService {
     }
 
     public Employee raiseSalary(Integer raise, Integer employeeId) {
+        if(!existsById(employeeId)){
+            throw new EmployeeNotFoundException("Employee Not Found");
+        }
         Employee employee = userRepository.getById(employeeId);
         double grossSalary = employee.getGrossSalary();
         employee.setGrossSalary(grossSalary + raise);

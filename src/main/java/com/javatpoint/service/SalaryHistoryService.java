@@ -1,5 +1,6 @@
 package com.javatpoint.service;
 
+import com.javatpoint.Exceptions.EmployeeNotFoundException;
 import com.javatpoint.model.Employee;
 import com.javatpoint.model.SalaryHistory;
 import com.javatpoint.repository.SalaryHistoryRepository;
@@ -21,6 +22,8 @@ public class SalaryHistoryService {
     public UserRepository userRepository;
     @Autowired
     public vacationRepository vacationRepository;
+    @Autowired
+    public EmployeeService employeeService;
 
     public double vacationsDeducationCalculation(int employeeId) {
         Date dt = new Date();
@@ -48,6 +51,9 @@ public class SalaryHistoryService {
     }
 
     public SalaryHistory addSalary(int employeeId) {
+        if(!employeeService.existsById(employeeId)){
+            throw new EmployeeNotFoundException("Employee Not Found");
+        }
         Employee employee = userRepository.getById(employeeId);
         String employeeName = employee.getName();
         Date dt = new Date();
