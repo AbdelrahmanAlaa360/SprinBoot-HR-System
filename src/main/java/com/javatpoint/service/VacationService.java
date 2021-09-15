@@ -1,5 +1,6 @@
 package com.javatpoint.service;
 
+import com.javatpoint.Exceptions.EmployeeNotFoundException;
 import com.javatpoint.model.Vacations;
 import com.javatpoint.repository.UserRepository;
 import com.javatpoint.repository.vacationRepository;
@@ -19,8 +20,13 @@ public class VacationService {
     public vacationRepository vacationRepository;
     @Autowired
     public UserRepository userRepository;
+    @Autowired
+    public EmployeeService employeeService;
 
     public Vacations addVacation(Vacations vacations) throws Exception {
+        if(!employeeService.existsById(vacations.getEmployeeId())){
+            throw new EmployeeNotFoundException("Employee Not Found");
+        }
         Date dt = new Date();
         int currentYear = dt.getYear() + 1900;
         String name = vacations.getEmployee_name();
@@ -43,6 +49,9 @@ public class VacationService {
 
 
     public int getExceededVacations(Integer id) throws Exception {
+        if(!employeeService.existsById(id)){
+            throw new EmployeeNotFoundException("Employee Not Found");
+        }
         Date dt = new Date();
         int currentYear = dt.getYear() + 1900;
         int exceededLeaves = vacationRepository.countExceededVacations(id, currentYear);

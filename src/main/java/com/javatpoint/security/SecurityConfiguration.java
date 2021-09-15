@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/HR/get-salary/").authenticated()
                 .antMatchers("/HR/salary-history/**").hasAnyRole("ADMIN","HR")
                 .antMatchers("/HR/salary-history/get-salary").hasRole("EMPLOYEE")
-                .antMatchers("/HR/vacations/**").hasAnyRole("ADMIN","HR")
+                .antMatchers("/HR/vacations/**").hasAnyRole("ADMIN","HR", "EMPLOYEE")
                 .antMatchers("/HR/vacations/get-vacation").authenticated()
                 .antMatchers("/").permitAll()
                 .and()
