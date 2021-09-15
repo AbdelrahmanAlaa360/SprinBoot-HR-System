@@ -49,6 +49,59 @@ public class MoreTestsOnEmployees {
     @Autowired
     UsersAccountRepository usersAccountRepository;
 
+
+    @Test
+    public void testWrongNotAuthenticatedAddUser() throws Exception {
+        Date dt = new Date();
+        int year = dt.getYear() + 1900;
+
+        Employee userRecord = new Employee();
+        userRecord.setName("Mohammed");
+        userRecord.setBirthDate(1988);
+        userRecord.setDepartment("CS");
+        userRecord.setExperience("Senior");
+        userRecord.setGender("Male");
+        userRecord.setTeamName("Team 3");
+        userRecord.setGrossSalary(5000);
+        userRecord.setManagerName("fathi");
+        userRecord.setGradDate(2019);
+        userRecord.setJoinYear(year);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(userRecord);
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/add-user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testHrAddUser() throws Exception {
+        Date dt = new Date();
+        int year = dt.getYear() + 1900;
+
+        Employee userRecord = new Employee();
+        userRecord.setName("Mohammed");
+        userRecord.setBirthDate(1988);
+        userRecord.setDepartment("CS");
+        userRecord.setExperience("Senior");
+        userRecord.setGender("Male");
+        userRecord.setTeamName("Team 3");
+        userRecord.setGrossSalary(5000);
+        userRecord.setManagerName("fathi");
+        userRecord.setGradDate(2019);
+        userRecord.setJoinYear(year);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(userRecord);
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/add-user")
+                        .with(httpBasic("hr", "hr123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk());
+    }
+
+
     @Test
     public void testWrongPasswordAddUser() throws Exception {
         Date dt = new Date();
@@ -128,12 +181,62 @@ public class MoreTestsOnEmployees {
     }
 
     @Test
+    public void testNegativeNetSalaryWithHr() throws Exception {
+        Date dt = new Date();
+        int year = dt.getYear() + 1900;
+
+        Employee userRecord = new Employee();
+        userRecord.setName("Mohammed");
+        userRecord.setBirthDate(1988);
+        userRecord.setDepartment("CS");
+        userRecord.setExperience("Senior");
+        userRecord.setGender("Male");
+        userRecord.setTeamName("Team 3");
+        userRecord.setGrossSalary(-5000);
+        userRecord.setManagerName("fathi");
+        userRecord.setGradDate(2019);
+        userRecord.setJoinYear(year);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(userRecord);
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/add-user")
+                        .with(httpBasic("hr", "hr123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isNotFound()).andDo(print());
+    }
+
+    @Test
     public void deleteNotFoundEmployee() throws Exception {
         int id = 20;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(id);
         mockMvc.perform(MockMvcRequestBuilders.post("/HR/delete-user")
                         .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isNotFound()).andDo(print());
+    }
+
+
+    @Test
+    public void deleteNotFoundEmployeeWithoutAuthentication() throws Exception {
+        int id = 20;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(id);
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/delete-user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isUnauthorized()).andDo(print());
+    }
+
+    @Test
+    public void deleteNotFoundEmployeeWithHr() throws Exception {
+        int id = 20;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(id);
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/delete-user")
+                        .with(httpBasic("hr", "hr123"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isNotFound()).andDo(print());
@@ -152,8 +255,31 @@ public class MoreTestsOnEmployees {
     }
 
     @Test
+    public void getInfoOfNonExistedEmployeeWithHr() throws Exception {
+        int employeeId = 20;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-employee/" + employeeId)
+                        .with(httpBasic("hr", "hr123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isNotFound()).andDo(print());
+    }
+
+    @Test
+    public void getInfoOfNonExistedEmployeeWitoutAuthentication() throws Exception {
+        int employeeId = 20;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-employee/" + employeeId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isUnauthorized()).andDo(print());
+    }
+
+    @Test
     @Transactional
-    public void updateNotExistedEmployee() throws Exception {
+    public void updateNotExistedEmployeeWithHr() throws Exception {
         Integer employeeId = 20;
         Employee employee = new Employee();
         employee.setGrossSalary(10000);
@@ -164,6 +290,36 @@ public class MoreTestsOnEmployees {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(employee)))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    public void updateNotExistedEmployee() throws Exception {
+        Integer employeeId = 20;
+        Employee employee = new Employee();
+        employee.setGrossSalary(10000);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/" + employeeId)
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(employee)))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    @Transactional
+    public void updateNotExistedEmployeeWithoutAuthentication() throws Exception {
+        Integer employeeId = 20;
+        Employee employee = new Employee();
+        employee.setGrossSalary(10000);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.put("/HR/update-user/" + employeeId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(employee)))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -192,12 +348,37 @@ public class MoreTestsOnEmployees {
     }
 
     @Test
+    @Transactional
+    public void getSalaryOfNotExistedEmployeeWithHr() throws Exception {
+        int id = 20;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(id);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-salary/" + id)
+                        .with(httpBasic("hr", "hr123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void getEmployeesInNotExistingTeam() throws Exception {
         String teamName = "Team 404";
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(teamName);
         mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-employees-in-team")
                         .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getEmployeesInNotExistingTeamWithHr() throws Exception {
+        String teamName = "Team 404";
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(teamName);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-employees-in-team")
+                        .with(httpBasic("hr", "hr123"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk());
@@ -221,6 +402,18 @@ public class MoreTestsOnEmployees {
         String body = objectMapper.writeValueAsString(managerName);
         mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-employees-under-specific-manager")
                         .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getEmployeesUnderManagerWithHr() throws Exception {
+        String managerName = "ahmed";
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(managerName);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/get-employees-under-specific-manager")
+                        .with(httpBasic("hr", "hr123"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk());
@@ -257,6 +450,18 @@ public class MoreTestsOnEmployees {
         String body = objectMapper.writeValueAsString(employeeId);
         mockMvc.perform(MockMvcRequestBuilders.put("/HR/raise-salary/" + employeeId)
                         .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(raise)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void salaryRaiseByHrNotExisitingEmployee() throws Exception {
+        Integer employeeId = 40, raise = 2000;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.put("/HR/raise-salary/" + employeeId)
+                        .with(httpBasic("hr", "hr123"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(raise)))
                 .andExpect(status().isNotFound());
