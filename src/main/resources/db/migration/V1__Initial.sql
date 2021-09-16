@@ -3,9 +3,9 @@
 create table if not exists department
 (
     department_id   int  auto_increment
-        primary key,
+    primary key,
     department_name varchar(255) null
-);
+    );
 
 
 -- auto-generated definition
@@ -66,12 +66,10 @@ create table salary_history
 -- auto-generated definition
 create table users_account
 (
-    id        int          null,
+    employee_id        int          null,
     user_name varchar(255) null,
     password  varchar(255) null,
     role      varchar(255) null
 );
-
-
 
 

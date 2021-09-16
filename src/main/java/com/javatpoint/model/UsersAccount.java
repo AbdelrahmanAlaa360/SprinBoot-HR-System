@@ -7,6 +7,7 @@ public class UsersAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private Integer employeeId;
     @Column(unique = true, nullable = false)
     private String user_name;
     @Column(nullable=false)
@@ -14,15 +15,24 @@ public class UsersAccount {
     @Column(nullable=false)
     private String role;
 
-    public UsersAccount(Integer id, String user_name, String password, String role) {
+    public UsersAccount(Integer id, Integer employeeId, String user_name, String password, String role) {
         this.id = id;
         this.user_name = user_name;
         this.password = password;
         this.role = role;
+        this.employeeId = employeeId;
     }
 
     public UsersAccount() {
 
+    }
+
+    public Integer getEmployyeeId() {
+        return employeeId;
+    }
+
+    public void setEmployyeeId(Integer employyeeId) {
+        this.employeeId = employyeeId;
     }
 
     public Integer getId() {

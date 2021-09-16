@@ -62,6 +62,17 @@ public class MoreTestsOnSalaryHistory {
     }
 
     @Test
+    public void addSalaryHistoryWrongHrPassword() throws Exception {
+        Integer employeeId = 4;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/salary-history/add/")
+                        .with(httpBasic("hr", "hrhr"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void addSalaryHistoryNonAuthorized() throws Exception {
         Integer employeeId = 4;
         ObjectMapper objectMapper = new ObjectMapper();
@@ -77,7 +88,7 @@ public class MoreTestsOnSalaryHistory {
         Integer employeeId = 4;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
-        mockMvc.perform(MockMvcRequestBuilders.post("/HR/salary-history/add/")
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/salary-history/add/" + employeeId)
                         .with(httpBasic("hr", "hr123"))
                         .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
@@ -115,12 +126,24 @@ public class MoreTestsOnSalaryHistory {
                 .andExpect(status().isUnauthorized());
     }
 
+
+    @Test
+    public void getSalaryHistoriesWrongHrPassword() throws Exception{
+        Integer employeeId = 4;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-salary/")
+                        .with(httpBasic("hr", "hrhr"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
     @Test
     public void getSalaryHistoriesWithHr() throws Exception{
         Integer employeeId = 4;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
-        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-salary/")
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-salary/" + employeeId)
                         .with(httpBasic("hr", "hr123"))
                         .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
@@ -131,9 +154,108 @@ public class MoreTestsOnSalaryHistory {
         Integer employeeId = 40;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
-        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-salary")
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-salary/" + employeeId)
                         .with(httpBasic("admin", "admin123"))
                         .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
+    public void getSpecificMonthSalaryNotExistingUser() throws Exception{
+        Integer employeeId = 40, month = 9, year = 2021;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-specific-month-salary/" + employeeId + "/" + month + "/" + year)
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isNotFound());
+    }
+
+    // This Test Should Fail But Passed!!|
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
+    public void getSpecificMonthSalaryWrongMonth() throws Exception{
+        Integer employeeId = 4, month = 90, year = 2021;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-specific-month-salary/" + employeeId + "/" + month + "/" + year)
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
+    }
+
+    // This Test Should Fail But Passed!!|
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
+    public void getSpecificMonthSalaryWrongYear() throws Exception{
+        Integer employeeId = 4, month = 9, year = 211021;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-specific-month-salary/" + employeeId + "/" + month + "/" + year)
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
+    public void getSpecificMonthSalaryNotAuthenticated() throws Exception{
+        Integer employeeId = 4, month = 9, year = 2021;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-specific-month-salary/" + employeeId + "/" + month + "/" + year)
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
+    public void getSpecificMonthSalaryWithHr() throws Exception{
+        Integer employeeId = 4, month = 9, year = 2021;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-specific-month-salary/" + employeeId + "/" + month + "/" + year)
+                        .with(httpBasic("hr", "hr123"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
+    public void getSpecificMonthSalaryWrongPassword() throws Exception{
+        Integer employeeId = 4, month = 9, year = 2021;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-specific-month-salary/" + employeeId + "/" + month + "/" + year)
+                        .with(httpBasic("admin", "addd"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
+    public void getSpecificMonthSalaryWrongHrPassword() throws Exception{
+        Integer employeeId = 4, month = 9, year = 2021;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-specific-month-salary/" + employeeId + "/" + month + "/" + year)
+                        .with(httpBasic("hr", "hrrrdd"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
+    public void getSpecificMonthSalaryNotAuthorized() throws Exception{
+        Integer employeeId = 4, month = 9, year = 2021;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-specific-month-salary/" + employeeId + "/" + month + "/" + year)
+                        .with(httpBasic("user", "user123"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isForbidden());
+    }
+
+
 }

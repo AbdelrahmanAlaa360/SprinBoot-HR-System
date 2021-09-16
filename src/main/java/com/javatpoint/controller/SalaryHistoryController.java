@@ -13,16 +13,22 @@ public class SalaryHistoryController {
     @Autowired
     private SalaryHistoryService salaryHistoryService;
 
-    @PostMapping(value = "/add")
-    public ResponseEntity addVacation(@RequestBody Integer employeeId) {
+    @PostMapping(value = "/add/{id}")
+    public ResponseEntity addVacation(@PathVariable("id") Integer employeeId) {
         salaryHistoryService.addSalary(employeeId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/get-salary")
-    public ResponseEntity getSalaryHistory(@RequestBody Integer employeeId){
+    @GetMapping("/get-salary/{id}")
+    public ResponseEntity getSalaryHistory(@PathVariable("id") Integer employeeId) {
         salaryHistoryService.getSalaryHistories(employeeId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/get-specific-month-salary/{employeeId}/{month}/{year}")
+    public ResponseEntity getSpecificMonthSalary(@PathVariable("employeeId") Integer employeeId, @PathVariable("year") Integer year, @PathVariable("month") Integer month) {
+        SalaryHistory salaryHistory = salaryHistoryService.getSalaryOfSpecificMonth(month, year, employeeId);
+        return ResponseEntity.ok(salaryHistory);
     }
 
 }

@@ -8,5 +8,4 @@
     <vacations id="3" employee_name="7amada" year="2021" exceeded="1" employee_id="4"/>
     <vacations id="4" employee_name="7amada" year="2021" exceeded="0" employee_id="4"/>
     <department department_id = "1" department_name = "Dept1" />
-    <users_account id = "1" user_name = "user" password = "user123" role = "HR"/>
 </dataset>

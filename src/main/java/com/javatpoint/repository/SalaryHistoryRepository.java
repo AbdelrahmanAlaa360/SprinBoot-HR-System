@@ -13,4 +13,8 @@ public interface SalaryHistoryRepository extends CrudRepository<SalaryHistory, I
     @Transactional
     @Query(value = "SELECT * FROM salary_history WHERE employee_id = :employeeId", nativeQuery = true)
     List<SalaryHistory> getSalaryHistories(Integer employeeId);
+
+    @Query(value = "SELECT * FROM salary_history WHERE employee_id = :employeeId AND year = :year AND month = :month", nativeQuery = true)
+    SalaryHistory getSalaryOfSpecificMonth(Integer employeeId, Integer month, Integer year);
+
 }

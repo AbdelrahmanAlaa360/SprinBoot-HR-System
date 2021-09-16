@@ -67,6 +67,21 @@ public class MoreTestsOnVacation {
     }
 
     @Test
+    public void addVacationWrongHrPassword() throws Exception {
+        Integer employeeId = 4;
+        Vacations vacations = new Vacations();
+        vacations.setEmployee_name("7amada");
+        vacations.setEmployeeId(employeeId);
+        vacations.setYear(2021);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(vacations);
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/vacations/add-vacation/")
+                        .with(httpBasic("hr", "hrhr"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void addVacationUnAuthorized() throws Exception {
         Integer employeeId = 4;
         Vacations vacations = new Vacations();
@@ -132,6 +147,19 @@ public class MoreTestsOnVacation {
                 .andExpect(status().isUnauthorized());
     }
 
+
+    @Test
+    public void getExceededVacationsWrongHrPassword() throws Exception {
+        Integer employeeId = 4;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/vacations/get-vacation/")
+                        .with(httpBasic("hr", "hrhr"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+
     @Test
     public void getExceededVacationsNotExistingEmployee() throws Exception {
         Integer employeeId = 40;
@@ -148,7 +176,7 @@ public class MoreTestsOnVacation {
         Integer employeeId = 4;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
-        mockMvc.perform(MockMvcRequestBuilders.get("/HR/vacations/get-vacation/")
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/vacations/get-vacation/" + employeeId)
                         .with(httpBasic("hr", "hr123"))
                         .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());

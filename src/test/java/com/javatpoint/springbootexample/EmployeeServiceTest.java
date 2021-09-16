@@ -148,19 +148,13 @@ public class EmployeeServiceTest {
     /*@Test
     public void getAllEmployeesUnderManager() throws Exception {
         // Test Passed
-
         Employee manager = employeeService.getUserById(1);
-
         if (manager == null)
             throw new NotFoundException("cant find manager");
-
         //List<Employee> employeesUnderManager = new ArrayList<>(manager.());
         //List<EmployeeInfoOnlyDTO> employeesDTO = EmployeeInfoOnlyDTO.setEmployeeToDTOList(employeesUnderManager);
-
         ObjectMapper objectMapper = new ObjectMapper();
         ///String employeesUnderManagerJson = objectMapper.writeValueAsString(employeesDTO);
-
-
         mockMvc.perform(MockMvcRequestBuilders.get("/employee/manager/" + manager.getId()))
                 .andExpect((ResultMatcher) content().json(employeesUnderManagerJson))
                 .andExpect(status().isOk());
@@ -225,7 +219,7 @@ public class EmployeeServiceTest {
         Integer employeeId = 4, raise = 2000;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
-        mockMvc.perform(MockMvcRequestBuilders.put("/HR/raise-salary/" + employeeId)
+        mockMvc.perform(MockMvcRequestBuilders.put("/HR/raise-salary/" + employeeId + "/" + raise)
                         .with(httpBasic("admin", "admin123"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(raise)))

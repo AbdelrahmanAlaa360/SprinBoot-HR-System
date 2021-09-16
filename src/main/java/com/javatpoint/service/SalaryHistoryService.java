@@ -91,4 +91,10 @@ public class SalaryHistoryService {
         }
         return salaryHistory;
     }
+    public SalaryHistory getSalaryOfSpecificMonth(Integer month, Integer year, Integer employeeId){
+        if(!userRepository.existsById(employeeId)){
+            throw new EmployeeNotFoundException("Employee Not Found\nPlease Enter Corret Employee Id");
+        }
+        return salaryHistoryRepository.getSalaryOfSpecificMonth(employeeId, month, year);
+    }
 }

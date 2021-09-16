@@ -61,7 +61,7 @@ public class VacationServiceTest {
         Integer employeeId = 4;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
-        mockMvc.perform(MockMvcRequestBuilders.get("/HR/vacations/get-vacation/")
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/vacations/get-vacation/" + employeeId)
                 .with(httpBasic("admin", "admin123"))
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());

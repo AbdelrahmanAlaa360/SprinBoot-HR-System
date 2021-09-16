@@ -21,8 +21,8 @@ public class VacationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/get-vacation")
-    public ResponseEntity<Object> getVacations(@RequestBody Integer employeeId) throws Exception {
+    @GetMapping(value = "/get-vacation/{id}")
+    public ResponseEntity<Object> getVacations(@PathVariable("id") Integer employeeId) throws Exception {
         int vacations = vacationService.getExceededVacations(employeeId);
         System.out.println("==========");
         System.out.println("Exceeded Leaves for Employee No " + employeeId + " is " + vacations + " Exceeded Leaves");

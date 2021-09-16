@@ -1,24 +1,31 @@
 package com.javatpoint.service;
 
+import com.javatpoint.Exceptions.BadArgumentException;
 import com.javatpoint.Exceptions.EmployeeNotFoundException;
 import com.javatpoint.Exceptions.NegativeSalaryException;
 import com.javatpoint.model.Salary;
+import com.javatpoint.model.UsersAccount;
+import com.javatpoint.repository.UsersAccountRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.javatpoint.model.Employee;
 import com.javatpoint.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.sql.*;
+import java.time.Instant;
 import java.util.List;
-
-import static com.javatpoint.model.Employee.updateEmployee;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
     @Autowired
     public UserRepository userRepository;
+    @Autowired
+    public UsersAccountRepository usersAccountRepository;
 
     public Employee getUserById(int id) throws NotFoundException {
         Employee employee = userRepository.findById(id).orElse(null);
@@ -29,7 +36,28 @@ public class EmployeeService {
     }
 
     public Employee addUser(Employee userRecord) throws Exception {
-        if (userRecord.netSalary <= 0) {
+        if(userRecord.getName() == null){
+            throw new BadArgumentException("Name Can not be Empty");
+        }
+        if(userRecord.getDepartment() == null){
+            throw new BadArgumentException("Department Can not be Empty");
+        }
+        if(userRecord.getExperience() == null){
+            throw new BadArgumentException("Experience Can not be Empty");
+        }
+        if(userRecord.getGender() == null){
+            throw new BadArgumentException("Gender Can not be Empty");
+        }
+        if(userRecord.getManagerName() == null){
+            throw new BadArgumentException("Manager Name Can not be Empty");
+        }
+        if(userRecord.getTeamName() == null){
+            throw new BadArgumentException("Team Name Can not be Empty");
+        }
+        if(userRecord.getJoinYear() < 2000){
+            throw new BadArgumentException("Join Year Can not be Less than 2000");
+        }
+        if (userRecord.grossSalary >= 0) {
             double tax = 0.15, insurance = 500;
             double netSalary = userRecord.grossSalary - (userRecord.grossSalary * tax) - insurance;
             if (netSalary <= 0) {
@@ -40,6 +68,26 @@ public class EmployeeService {
             throw new NegativeSalaryException("Gross Salary Must be greater than zero");
         }
         userRepository.save(userRecord);
+
+        Integer employeeId = userRecord.getId();
+
+        /********* User Account Auto Generation **********/
+        UsersAccount usersAccount = new UsersAccount();
+        long unixTime = Instant.now().getEpochSecond();
+        String userName = userRecord.getName() + unixTime;
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        int actualPassword = (int)(Math.random() * 10000001);  // 0 to 10000000
+        String encryptedPassword = encoder.encode(Integer.toString(actualPassword));
+        usersAccount.setUser_name(userName);
+        usersAccount.setPassword(encryptedPassword);
+        usersAccount.setRole("EMPLOYEE");
+        usersAccount.setEmployyeeId(employeeId);
+        /********* End User Account Auto Generation *********/
+
+        System.out.println("\n\n==============");
+        System.out.println("actualPassword:  " + actualPassword + "\nEncrypted:  " + encryptedPassword);
+
+        //usersAccountRepository.save(usersAccount);
         return userRecord;
     }
 
@@ -57,6 +105,23 @@ public class EmployeeService {
             return false;
         }
         return userRepository.existsById(id);
+    }
+
+    public static Employee updateEmployee(Employee newEmployer, Employee oldEmployer) {
+        if (newEmployer.name != null) oldEmployer.name = newEmployer.name;
+        if (newEmployer.gender != null) oldEmployer.gender = newEmployer.gender;
+        if (newEmployer.birthDate != 0) oldEmployer.birthDate = newEmployer.birthDate;
+        if (newEmployer.gradDate != 0) oldEmployer.gradDate = newEmployer.gradDate;
+        if (newEmployer.experience != null) oldEmployer.experience = newEmployer.experience;
+        if (newEmployer.department != null) oldEmployer.department = newEmployer.department;
+        if (newEmployer.grossSalary >= 0) {
+            oldEmployer.grossSalary = newEmployer.grossSalary;
+            oldEmployer.netSalary = newEmployer.grossSalary - (newEmployer.grossSalary * 0.15) - 500;
+        }
+        if (newEmployer.teamName != null) oldEmployer.teamName = newEmployer.teamName;
+        if (newEmployer.managerName != null) oldEmployer.managerName = newEmployer.managerName;
+        if (newEmployer.joinYear != 0) oldEmployer.joinYear = newEmployer.joinYear;
+        return oldEmployer;
     }
 
     @Transactional

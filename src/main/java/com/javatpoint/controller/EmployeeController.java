@@ -43,7 +43,6 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
-
     @PostMapping(value = "/delete-user")
     public void deleteUser(@RequestBody int id) {
         employeeService.deleteUser(id);
@@ -74,8 +73,8 @@ public class EmployeeController {
         return ResponseEntity.ok(l);
     }
 
-    @PutMapping(value = "/raise-salary/{id}")
-    public ResponseEntity<Object> raiseSalary(@RequestBody Integer raise, @PathVariable("id") Integer id) throws NotFoundException {
+    @PutMapping(value = "/raise-salary/{id}/{raise}")
+    public ResponseEntity<Object> raiseSalary(@PathVariable("raise") Integer raise, @PathVariable("id") Integer id) throws NotFoundException {
         employeeService.raiseSalary(raise, id);
         return ResponseEntity.ok().build();
     }

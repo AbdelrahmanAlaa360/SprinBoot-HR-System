@@ -45,7 +45,7 @@ public class SalaryHistoryServiceTest {
         Integer employeeId = 4;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
-        mockMvc.perform(MockMvcRequestBuilders.post("/HR/salary-history/add/")
+        mockMvc.perform(MockMvcRequestBuilders.post("/HR/salary-history/add/" + employeeId)
                 .with(httpBasic("admin", "admin123"))
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
@@ -57,9 +57,21 @@ public class SalaryHistoryServiceTest {
         Integer employeeId = 4;
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(employeeId);
-        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-salary/")
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-salary/" + employeeId)
                 .with(httpBasic("admin", "admin123"))
                 .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED, value = "/data.xml")
+    public void getSpecificMonthSalary() throws Exception{
+        Integer employeeId = 4, month = 9, year = 2021;
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(employeeId);
+        mockMvc.perform(MockMvcRequestBuilders.get("/HR/salary-history/get-specific-month-salary/" + employeeId + "/" + month + "/" + year)
+                        .with(httpBasic("admin", "admin123"))
+                        .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isOk());
     }
 

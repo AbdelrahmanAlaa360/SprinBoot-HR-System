@@ -42,23 +42,6 @@ public class Employee {
         this.joinYear = joinYear;
     }
 
-    public static Employee updateEmployee(Employee newEmployer, Employee oldEmployer) {
-        if (newEmployer.name != null) oldEmployer.name = newEmployer.name;
-        if (newEmployer.gender != null) oldEmployer.gender = newEmployer.gender;
-        if (newEmployer.birthDate != 0) oldEmployer.birthDate = newEmployer.birthDate;
-        if (newEmployer.gradDate != 0) oldEmployer.gradDate = newEmployer.gradDate;
-        if (newEmployer.experience != null) oldEmployer.experience = newEmployer.experience;
-        if (newEmployer.department != null) oldEmployer.department = newEmployer.department;
-        if (newEmployer.grossSalary >= 0) {
-            oldEmployer.grossSalary = newEmployer.grossSalary;
-            oldEmployer.netSalary = newEmployer.grossSalary - (newEmployer.grossSalary * 0.15) - 500;
-        }
-        if (newEmployer.teamName != null) oldEmployer.teamName = newEmployer.teamName;
-        if (newEmployer.managerName != null) oldEmployer.managerName = newEmployer.managerName;
-        if (newEmployer.joinYear != 0) oldEmployer.joinYear = newEmployer.joinYear;
-        return oldEmployer;
-    }
-
     public Employee() {
     }
 
