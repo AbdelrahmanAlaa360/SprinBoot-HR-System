@@ -1,7 +1,7 @@
 # Spring Boot HR Management System
 
 #### The system is developed using [JavaSpringBoot](https://spring.io/projects/spring-boot) Maven using [MVC Pattern](https://www.freecodecamp.org/news/the-model-view-controller-pattern-mvc-architecture-and-frameworks-explained/) and running on MySQL database, and unit testing with H2 database. The main objectice of the system is manage different employees and record their activities in their company and managing departments, teams, salaries, and annual vacations.
-#### Also the system is covering most of scenarios using DB UnitTesting with more than 65 tests, also SpringBoot security is enabled for handling requests and Basic Authenticaition is required
+#### Also the system is covering most of scenarios using DB UnitTesting with more than 65 tests, also SpringBoot security is enabled for handling requests and Basic Authenticaition is required, and tested with Postman Collection
 
 ## Description
 
