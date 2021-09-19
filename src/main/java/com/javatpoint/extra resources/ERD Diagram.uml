@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.department</OriginalElement>
+  <nodes>
+    <node x="0.0" y="671.0">3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.department</node>
+    <node x="0.0" y="371.0">3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.salary_history</node>
+    <node x="212.0" y="426.0">3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.vacations</node>
+    <node x="215.0" y="0.0">3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.employee</node>
+    <node x="424.0" y="437.5">3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.users_account</node>
+    <node x="249.0" y="671.0">3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.hibernate_sequence</node>
+    <node x="630.0" y="0.0">3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.flyway_schema_history</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.salary_history" target="3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.employee" relationship="REFERENCES">
+      <point x="0.0" y="-127.5" />
+      <point x="96.0" y="346.0" />
+      <point x="308.0" y="346.0" />
+      <point x="0.0" y="160.5" />
+    </edge>
+    <edge source="3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.users_account" target="3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.employee" relationship="REFERENCES">
+      <point x="0.0" y="-61.0" />
+      <point x="504.5" y="346.0" />
+      <point x="308.0" y="346.0" />
+      <point x="0.0" y="160.5" />
+    </edge>
+    <edge source="3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.vacations" target="3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.employee" relationship="REFERENCES">
+      <point x="0.0" y="-72.5" />
+      <point x="0.0" y="160.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.894155844155844" showDependencies="false" x="388.42799241084845" y="310.41394335511984" />
+  <SelectedNodes>
+    <node>3c6ad621-5dd6-4ed9-b726-8c9a78c1b585.TABLE:phase1.hibernate_sequence</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Comments</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

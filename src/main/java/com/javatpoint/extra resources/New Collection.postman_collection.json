@@ -1,0 +1,661 @@
+{
+	"info": {
+		"_postman_id": "640b8c56-7831-48b4-b74f-e9a74761aba9",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Employee",
+			"item": [
+				{
+					"name": "localhost:8080/HR/get-employee/2  - With Hr",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "hr123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hr",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/HR/get-employee/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"get-employee",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:8080/HR/get-employee/4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "4"
+						},
+						"url": {
+							"raw": "localhost:8080/HR/get-employee/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"get-employee",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:8080/HR/get-employees-under-specific-manager",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"managerName\":\"7amada\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/HR/get-employees-under-specific-manager",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"get-employees-under-specific-manager"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get Salary",
+			"item": [
+				{
+					"name": "localhost:8080/HR/get-salary/4",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "hr123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hr",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/HR/get-salary/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"get-salary",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Add Employee",
+			"item": [
+				{
+					"name": "localhost:8080/HR/add-user",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"name\" : \"Mohammed\",\r\n\"birthDate\" : 3455,\r\n\"department\" : \"CS\",\r\n\"experience\" : \"Senior\",\r\n\"gender\" : \"Male\",\r\n\"teamName\" : \"Team 3\",\r\n\"grossSalary\" : 5000,\r\n\"managerName\" : \"Fathi\",\r\n\"gradDate\" : 2019,\r\n\"joinYear\" : 2021\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/HR/add-user",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"add-user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update User",
+			"item": [
+				{
+					"name": "localhost:8080/HR/update-user/7",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"grossSalary\" : 7000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/HR/update-user/7",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"update-user",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get Employee In Team",
+			"item": [
+				{
+					"name": "localhost:8080/HR/get-employees-in-team",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"teamName\":\"Team 3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/HR/get-employees-in-team",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"get-employees-in-team"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Raise Salary",
+			"item": [
+				{
+					"name": "localhost:8080/HR/raise-salary/6/2000",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/HR/raise-salary/6/2000",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"raise-salary",
+								"6",
+								"2000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Department",
+			"item": [
+				{
+					"name": "localhost:8080/HR/add-department",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"department_name\":\"Dept300\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/HR/add-department",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"add-department"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Salary History",
+			"item": [
+				{
+					"name": "localhost:8080/HR/salary-history/add/6",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/HR/salary-history/add/6",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"salary-history",
+								"add",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:8080/HR/salary-history/get-salary/6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/HR/salary-history/get-salary/6",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"salary-history",
+								"get-salary",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:8080/HR/salary-history/get-specific-month-salary/4/9/2021",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/HR/salary-history/get-specific-month-salary/4/9/2021",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"salary-history",
+								"get-specific-month-salary",
+								"4",
+								"9",
+								"2021"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vacation",
+			"item": [
+				{
+					"name": "localhost:8080/HR/vacations/add-vacation/",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employee_name\" : \"Mohammed\",\r\n    \"year\" : 2021,\r\n    \"employeeId\" : 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/HR/vacations/add-vacation/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"vacations",
+								"add-vacation",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:8080/HR/vacations/get-vacation/3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/HR/vacations/get-vacation/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"HR",
+								"vacations",
+								"get-vacation",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
