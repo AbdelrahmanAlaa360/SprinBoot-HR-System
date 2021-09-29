@@ -32,4 +32,4 @@
 - [ ] Rest API to get employees directly under specific manager
 - [ ] Rest API to get salary history for each employee includeing his deductions, bonuses, and tax rate
 - [ ] Rest API to add vacation and determine whether this vacation has exceeded the limit or not
-- [ ] Rest API to get exceeded vacations for each employee
+- [ ] Rest API to get exceeded vacations for each employee 
